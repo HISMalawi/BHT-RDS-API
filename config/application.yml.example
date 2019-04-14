@@ -1,0 +1,7 @@
+couchdb:
+  protocol: http
+  host: localhost
+  port: 5985
+  username: admin
+  password: password
+  database: rds
