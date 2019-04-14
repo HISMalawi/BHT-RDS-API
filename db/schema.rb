@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 0) do
+ActiveRecord::Schema.define(version: 2019_04_14_180742) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
@@ -437,6 +437,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.string "uuid", limit: 38, null: false
     t.integer "changed_by"
     t.datetime "date_changed"
+    t.integer "program_id"
     t.index ["changed_by"], name: "encounter_changed_by"
     t.index ["creator"], name: "encounter_creator"
     t.index ["encounter_datetime"], name: "encounter_datetime_idx"
@@ -444,6 +445,7 @@ ActiveRecord::Schema.define(version: 0) do
     t.index ["form_id"], name: "encounter_form"
     t.index ["location_id"], name: "encounter_location"
     t.index ["patient_id"], name: "encounter_patient"
+    t.index ["program_id"], name: "fk_rails_ad7f416cd0"
     t.index ["provider_id"], name: "encounter_provider"
     t.index ["uuid"], name: "encounter_uuid_index", unique: true
     t.index ["voided_by"], name: "user_who_voided_encounter"
@@ -1500,6 +1502,7 @@ ActiveRecord::Schema.define(version: 0) do
   add_foreign_key "encounter", "location", primary_key: "location_id", name: "encounter_location"
   add_foreign_key "encounter", "patient", primary_key: "patient_id", name: "encounter_patient", on_update: :cascade
   add_foreign_key "encounter", "person", column: "provider_id", primary_key: "person_id", name: "encounter_provider"
+  add_foreign_key "encounter", "program", primary_key: "program_id"
   add_foreign_key "encounter", "users", column: "changed_by", primary_key: "user_id", name: "encounter_changed_by"
   add_foreign_key "encounter", "users", column: "creator", primary_key: "user_id", name: "encounter_ibfk_1"
   add_foreign_key "encounter", "users", column: "voided_by", primary_key: "user_id", name: "user_who_voided_encounter"
