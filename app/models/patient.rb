@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class Patient < VoidableRecord
-  include ModelUtils
-
   after_void :void_related_models
 
   NPID_NAME = 'National id'
