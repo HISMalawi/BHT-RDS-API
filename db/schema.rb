@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_14_180742) do
+ActiveRecord::Schema.define(version: 2019_04_15_100939) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
@@ -355,6 +355,14 @@ ActiveRecord::Schema.define(version: 2019_04_14_180742) do
     t.index ["concept_id"], name: "concept_word_concept_idx"
     t.index ["concept_name_id"], name: "word_for_name"
     t.index ["word"], name: "word_in_concept_name"
+  end
+
+  create_table "couch_updates", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "doc_id", null: false
+    t.string "doc_type", null: false
+    t.text "doc", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "drug", primary_key: "drug_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -951,6 +959,7 @@ ActiveRecord::Schema.define(version: 2019_04_14_180742) do
     t.string "accession_number"
     t.string "uuid", limit: 38, null: false
     t.string "discontinued_reason_non_coded"
+    t.integer "obs_id"
     t.index ["creator"], name: "order_creator"
     t.index ["discontinued_by"], name: "user_who_discontinued_order"
     t.index ["discontinued_reason"], name: "discontinued_because"
@@ -1421,6 +1430,7 @@ ActiveRecord::Schema.define(version: 2019_04_14_180742) do
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
+    t.date "deactivated_on"
     t.index ["changed_by"], name: "user_who_changed_user"
     t.index ["creator"], name: "user_creator"
     t.index ["person_id"], name: "person_id_for_user"

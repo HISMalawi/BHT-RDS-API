@@ -1,0 +1,2 @@
+class CouchUpdate < ApplicationRecord
+end
