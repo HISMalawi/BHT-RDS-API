@@ -3,15 +3,19 @@
 require 'logger'
 require 'rest-client'
 
+MAX_COUCH_UPDATES_FETCHED = 5000 # Maximum updates that can be fetched per request
+MAX_COUCH_UPDATE_QUEUE_COUNT = 10 # Maximum number of times an update can be (re-)queued
+
 class CouchSyncService
   LOGGER = Logger.new(STDOUT)
 
   class UpdatesQueue
-    def push(doc_id, type, doc)
+    def push(doc_id, type, doc, queue_count = 0)
       LOGGER.debug("Queueing #{type}(#{doc_id}, doc: #{doc})")
 
       CouchUpdate.create(doc_id: doc_id, doc_type: type,
-                         doc: doc.to_json, created_at: Time.now)
+                         doc: doc.to_json, queue_count: queue_count,
+                         created_at: Time.now)
     end
 
     def pop
@@ -20,7 +24,7 @@ class CouchSyncService
 
       update.destroy
       LOGGER.debug("Popped #{update.doc_type}(#{update.doc_id}) from queue")
-      [update.doc_id, update.doc_type, JSON.parse(update.doc)]
+      [update.doc_id, update.doc_type, JSON.parse(update.doc), queue_count]
     end
 
     def include?(doc_id)
@@ -36,22 +40,18 @@ class CouchSyncService
     fetch_updates # Loads any incoming updates into queue
 
     while (update = updates_queue.pop)
-      puts update
-      doc_id, type, doc = update
+      doc_id, type, doc, queue_count = update
 
       begin
         model = type.constantize
         record = model.find_by("#{model.primary_key} = ?", doc[model.primary_key])
-        puts "Record: #{record}"
         record = record ? record.update(doc) && record : model.create(doc)
       rescue StandardError => e
-        # if e.message.include?('foreign key constraint fails')
-        #   updates_queue.push(doc_id, type, doc)
-        #   next
-        # end
-
+        LOGGER.error("Failed to save #{model}: #{doc}")
         LOGGER.error(e)
-        updates_queue.push(doc_id, type, doc)
+        if queue_count < MAX_COUCH_UPDATE_QUEUE_COUNT
+          updates_queue.push(doc_id, type, doc, queue_count + 1)
+        end
         next
       end
 
@@ -68,9 +68,8 @@ class CouchSyncService
     last_seq = load_last_seq
 
     response = handle_response do
-      url = "#{couch_database_url}/_changes"
-      url = "#{url}?last_seq=#{last_seq}" if last_seq
-      # TODO: mod url to include last_seq if available
+      url = "#{couch_database_url}/_changes?limit=#{MAX_COUCH_UPDATES_FETCHED}"
+      url = "#{url}&last_seq=#{last_seq}" if last_seq
       LOGGER.debug("Fetching changes from: #{url}")
       RestClient.get(url)
     end
