@@ -6,7 +6,7 @@ namespace :app do
   LOGGER = Logger.new(STDOUT)
   # SQL Scripts for database setup
   SQL_SCRIPTS = [
-    'openmrs_1_7_2_concept_server_full_db.sql',
+    'openmrs_1.7.0_schema.sql',
     'openmrs_metadata_1_7.sql'
   ].freeze
 
@@ -20,7 +20,7 @@ namespace :app do
       LOGGER.error('Invalid response: Y/N [N]> ')
     end
 
-    next if system('rails db:drop db:create app:db_setup db:migrate')
+    next if system('rails db:drop db:create app:db_setup db:migrate app:clear_log')
 
     LOGGER.error('Failed to setup database, please check your database configuration')
     exit(1)
@@ -36,6 +36,13 @@ namespace :app do
       LOGGER.error("Failed to load SQL script `#{script}`, please check your database configuration")
       exit(1)
     end
+  end
+
+  task :clear_log do
+    LOGGER.info('Deleting last_seq file...')
+    File.unlink(Rails.root.join('log/rds_last_seq.yml'))
+  rescue Errno::ENOENT => e
+    LOGGER.warn("Failed to delete last_seq file: #{e}")
   end
 
   def mysql_load_script_command(script)
