@@ -8,12 +8,12 @@ class Order < VoidableRecord
 
   belongs_to :order_type
   belongs_to :concept
-  belongs_to :encounter
-  belongs_to :patient
+  belongs_to :encounter, optional: true
+  belongs_to :patient, optional: true
   belongs_to :provider, foreign_key: 'orderer', class_name: 'User', optional: true
 
-  validates_presence_of :patient_id, :concept_id, :encounter_id,
-                        :provider, :orderer
+  validates_presence_of :patient_id, :concept_id, :encounter_id
+
   has_many :observations
   has_one :drug_order
 

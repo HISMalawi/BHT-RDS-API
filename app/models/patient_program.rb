@@ -4,7 +4,7 @@ class PatientProgram < VoidableRecord
 
   after_void :after_void
 
-  belongs_to :patient
+  belongs_to :patient, optional: true
   belongs_to :program
   belongs_to :location
   has_many :patient_states, class_name: 'PatientState', dependent: :destroy

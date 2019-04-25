@@ -6,7 +6,7 @@ class User < RetirableRecord
 
   cattr_accessor :current
 
-  belongs_to :person, foreign_key: :person_id
+  belongs_to :person, foreign_key: :person_id, optional: true
 
   has_many :properties, class_name: 'UserProperty', foreign_key: :user_id
   has_many :user_roles, class_name: 'UserRole'

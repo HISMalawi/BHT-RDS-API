@@ -23,8 +23,8 @@ class Observation < VoidableRecord
 
   belongs_to :encounter, optional: true
   belongs_to :order, optional: true
-  belongs_to :concept
-  belongs_to :person
+  belongs_to :concept, optional: true
+  belongs_to :person, optional: true
   belongs_to :parent, class_name: 'Observation', foreign_key: :obs_group_id, primary_key: :obs_id, optional: true
   has_many :children, class_name: 'Observation', foreign_key: :obs_group_id
   # belongs_to :concept_name, class_name: 'ConceptName', foreign_key: 'concept_name'

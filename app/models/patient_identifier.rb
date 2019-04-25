@@ -4,7 +4,7 @@ class PatientIdentifier < VoidableRecord
 
   belongs_to(:type, class_name: 'PatientIdentifierType',
                     foreign_key: :identifier_type)
-  belongs_to(:patient, class_name: 'Patient', foreign_key: :patient_id)
+  belongs_to(:patient, class_name: 'Patient', foreign_key: :patient_id, optional: true)
 
   def as_json(options = {})
     super(options.merge(methods: %i[type]))
