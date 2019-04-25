@@ -19,12 +19,11 @@ class CouchSyncService
     end
 
     def pop
-      update = CouchUpdate.order(:created_at).first
+      update = CouchUpdate.order(Arel.sql('queue_count ASC, created_at DESC')).first
       return nil unless update
 
-      update.destroy
       LOGGER.debug("Popped #{update.doc_type}(#{update.doc_id}) from queue")
-      [update.doc_id, update.doc_type, JSON.parse(update.doc), queue_count]
+      update
     end
 
     def include?(doc_id)
@@ -39,44 +38,56 @@ class CouchSyncService
   def load_updates
     fetch_updates # Loads any incoming updates into queue
 
-    while (update = updates_queue.pop)
-      doc_id, type, doc, queue_count = update
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks=0')
 
+    while (update = updates_queue.pop)
       begin
-        model = type.constantize
+        doc = JSON.parse(update.doc)
+        model = update.doc_type.constantize
         record = model.find_by("#{model.primary_key} = ?", doc[model.primary_key])
         record = record ? record.update(doc) && record : model.create(doc)
-      rescue StandardError => e
-        LOGGER.error("Failed to save #{model}: #{doc}")
-        LOGGER.error(e)
-        if queue_count < MAX_COUCH_UPDATE_QUEUE_COUNT
-          updates_queue.push(doc_id, type, doc, queue_count + 1)
+        if record.errors.empty?
+          LOGGER.info("Successfully saved #{model}(#{update.doc_id} => ##{record.id})")
+          update.destroy
+        else
+          LOGGER.error("Error loading #{model}(#{update.doc_id}) due to:\n\t#{record.errors.to_json} ~ #{update.doc}")
+          update.queue_count += 1
+          update.created_at = Time.now
+          update.save
         end
-        next
-      end
-
-      unless record.errors.empty?
-        LOGGER.error("Error loading #{model}#{record.as_json} due to: #{record.errors.to_json}")
-        updates_queue.push(doc_id, type, doc)
+      rescue StandardError => e
+        LOGGER.error("Error loading #{update.doc_type}(#{update.doc_id}):")
+        LOGGER.error(e)
+        update.queue_count += 1
+        update.created_at = Time.now
+        update.save
       end
     end
+
+    ActiveRecord::Base.connection.execute('SET foreign_key_checks=1')
   end
 
   private
 
   def fetch_updates
-    last_seq = load_last_seq
+    loop do
+      last_seq = load_last_seq
 
-    response = handle_response do
-      url = "#{couch_database_url}/_changes?limit=#{MAX_COUCH_UPDATES_FETCHED}"
-      url = "#{url}&last_seq=#{last_seq}" if last_seq
-      LOGGER.debug("Fetching changes from: #{url}")
-      RestClient.get(url)
+      response = handle_response do
+        url = "#{couch_database_url}/_changes?limit=#{MAX_COUCH_UPDATES_FETCHED}"
+        url = "#{url}&since=#{last_seq}" if last_seq
+        LOGGER.debug("Fetching changes from: #{url}")
+        RestClient.get(url)
+      end
+
+      save_last_seq(response['last_seq'])
+
+      results = response['results']
+
+      break if results.empty?
+
+      queue_updates(results)
     end
-
-    save_last_seq(response['last_seq'])
-
-    queue_updates(response['results'])
   end
 
   def couch_database_url
@@ -132,7 +143,7 @@ class CouchSyncService
 
   def save_last_seq(last_seq)
     File.open(LAST_SEQ_FILE_PATH, 'w') do |file|
-      file.write({ last_seq: last_seq }.to_yaml)
+      file.write({ 'last_seq' => last_seq }.to_yaml)
     end
   end
 end
