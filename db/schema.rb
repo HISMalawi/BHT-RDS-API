@@ -14,17 +14,17 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
-    t.integer "person_id", null: false
+    t.bigint "person_id", null: false
     t.integer "concept_id", null: false
-    t.integer "start_obs_id"
-    t.integer "stop_obs_id"
+    t.bigint "start_obs_id"
+    t.bigint "stop_obs_id"
     t.datetime "start_date", null: false
     t.datetime "end_date"
     t.string "comments"
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -52,10 +52,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "active_list_type", primary_key: "active_list_type_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "name", limit: 50, null: false
     t.string "description"
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -74,13 +74,13 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "cohort", primary_key: "cohort_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", null: false
     t.string "description", limit: 1000
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
     t.index ["changed_by"], name: "user_who_changed_cohort"
@@ -91,12 +91,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
 
   create_table "cohort_member", primary_key: ["cohort_id", "patient_id"], options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "cohort_id", default: 0, null: false
-    t.integer "patient_id", default: 0, null: false
+    t.bigint "patient_id", default: 0, null: false
     t.index ["cohort_id"], name: "cohort"
     t.index ["patient_id"], name: "patient"
   end
 
-  create_table "complex_obs", primary_key: "obs_id", id: :integer, default: 0, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "complex_obs", primary_key: "obs_id", id: :bigint, default: 0, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "mime_type_id", default: 0, null: false
     t.text "urn"
     t.text "complex_value", limit: 4294967295
@@ -111,13 +111,13 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "datatype_id", default: 0, null: false
     t.integer "class_id", default: 0, null: false
     t.integer "is_set", limit: 2, default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "default_charge"
     t.string "version", limit: 50
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -133,7 +133,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "concept_id", default: 0, null: false
     t.integer "answer_concept"
     t.integer "answer_drug"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.string "uuid", limit: 38, null: false
     t.float "sort_weight", limit: 53
@@ -146,10 +146,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "concept_class", primary_key: "concept_class_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -167,10 +167,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "name", default: "", null: false
     t.string "hl7_abbreviation", limit: 3
     t.string "description", default: "", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -191,9 +191,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "concept_id", default: 0, null: false
     t.text "description", null: false
     t.string "locale", limit: 50, default: "", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
     t.index ["changed_by"], name: "user_who_changed_description"
@@ -206,7 +206,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "source"
     t.string "source_code"
     t.string "comment"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "concept_id", default: 0, null: false
     t.string "uuid", limit: 38, null: false
@@ -220,10 +220,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "concept_id"
     t.string "name", default: "", null: false
     t.string "locale", limit: 50, default: "", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -240,10 +240,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "concept_name_tag", primary_key: "concept_name_tag_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tag", limit: 50, null: false
     t.text "description", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -275,16 +275,16 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
 
   create_table "concept_proposal", primary_key: "concept_proposal_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "concept_id"
-    t.integer "encounter_id"
+    t.bigint "encounter_id"
     t.string "original_text", default: "", null: false
     t.string "final_text"
-    t.integer "obs_id"
+    t.bigint "obs_id"
     t.integer "obs_concept_id"
     t.string "state", limit: 32, default: "UNMAPPED", null: false, comment: "Valid values are: UNMAPPED, SYNONYM, CONCEPT, REJECT"
     t.string "comments", comment: "Comment from concept admin/mapper"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "locale", limit: 50, default: "", null: false
     t.string "uuid", limit: 38, null: false
@@ -308,7 +308,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "concept_id", default: 0, null: false
     t.integer "concept_set", default: 0, null: false
     t.float "sort_weight", limit: 53
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.string "uuid", limit: 38, null: false
     t.index ["concept_id"], name: "idx_concept_set_concept"
@@ -327,10 +327,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "name", limit: 50, default: "", null: false
     t.text "description", null: false
     t.string "hl7_code", limit: 50
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.boolean "retired", null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -356,7 +356,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "concept_id", default: 0, null: false
     t.string "synonym", default: "", null: false
     t.string "locale"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.index ["concept_id"], name: "synonym_for"
     t.index ["creator"], name: "synonym_creator"
@@ -384,10 +384,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "district", primary_key: "district_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "region_id", default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.index ["creator"], name: "user_who_created_district"
@@ -411,10 +411,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.float "minimum_daily_dose", limit: 53
     t.integer "route"
     t.string "units", limit: 50
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -435,7 +435,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "weight"
     t.string "strength"
     t.integer "voided", limit: 1, default: 0
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 225
     t.datetime "created_at", null: false
@@ -453,7 +453,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "drug_order", primary_key: "order_id", id: :integer, default: 0, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "drug_order", primary_key: "order_id", id: :bigint, default: 0, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "drug_inventory_id", default: 0
     t.float "dose", limit: 53
     t.float "equivalent_daily_dose", limit: 53
@@ -479,9 +479,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "duration", null: false
     t.datetime "date_created"
     t.datetime "date_updated"
-    t.integer "creator"
+    t.bigint "creator"
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
   end
 
   create_table "dset", primary_key: "set_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -489,25 +489,25 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.text "description"
     t.datetime "date_created"
     t.datetime "date_updated"
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.string "status", limit: 25, null: false
   end
 
-  create_table "encounter", primary_key: "encounter_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "encounter", primary_key: "encounter_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "encounter_type", null: false
-    t.integer "patient_id", default: 0, null: false
-    t.integer "provider_id", default: 0, null: false
+    t.bigint "patient_id", default: 0, null: false
+    t.bigint "provider_id", default: 0, null: false
     t.integer "location_id"
     t.integer "form_id"
     t.datetime "encounter_datetime", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "program_id"
     t.index ["changed_by"], name: "encounter_changed_by"
@@ -525,10 +525,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "encounter_type", primary_key: "encounter_type_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", limit: 50, default: "", null: false
     t.text "description"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -542,7 +542,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "source", default: 0, null: false
     t.string "source_code", null: false
     t.string "name"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.index ["creator"], name: "map_ext_creator"
     t.index ["source"], name: "map_ext_source"
@@ -557,12 +557,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "attribute_name", limit: 50
     t.text "default_value"
     t.integer "select_multiple", limit: 2, default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -578,7 +578,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "field_answer", primary_key: ["field_id", "answer_id"], options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "field_id", default: 0, null: false
     t.integer "answer_id", default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.string "uuid", limit: 38, null: false
     t.index ["answer_id"], name: "field_answer_concept"
@@ -591,7 +591,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "name", limit: 50
     t.text "description", limit: 4294967295
     t.integer "is_set", limit: 2, default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.string "uuid", limit: 38, null: false
     t.index ["creator"], name: "user_who_created_field_type"
@@ -607,12 +607,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "encounter_type"
     t.text "template", limit: 16777215
     t.text "xslt", limit: 16777215
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retired_reason"
     t.string "uuid", limit: 38, null: false
@@ -626,9 +626,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "form2program_map", primary_key: ["program", "encounter_type"], options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "program", null: false
     t.integer "encounter_type", null: false
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by", null: false
+    t.bigint "changed_by", null: false
     t.datetime "date_changed", null: false
     t.boolean "applied", default: false, null: false
     t.index ["changed_by"], name: "user_who_changed_form2program"
@@ -646,9 +646,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "min_occurs"
     t.integer "max_occurs"
     t.integer "required", limit: 2, default: 0, null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.float "sort_weight"
     t.string "uuid", limit: 38, null: false
@@ -663,7 +663,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "formentry_archive", primary_key: "formentry_archive_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "form_data", limit: 16777215, null: false
     t.datetime "date_created", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.index ["creator"], name: "User who created formentry_archive"
   end
 
@@ -671,24 +671,24 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.text "form_data", limit: 16777215, null: false
     t.string "error", default: "", null: false
     t.text "error_details"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.index ["creator"], name: "User who created formentry_error"
   end
 
   create_table "formentry_queue", primary_key: "formentry_queue_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "form_data", limit: 16777215, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
   end
 
   create_table "formentry_xsn", primary_key: "formentry_xsn_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "form_id", null: false
     t.binary "xsn_data", limit: 4294967295, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "archived", default: 0, null: false
-    t.integer "archived_by"
+    t.bigint "archived_by"
     t.datetime "date_archived"
     t.index ["archived_by"], name: "User who archived formentry_xsn"
     t.index ["creator"], name: "User who created formentry_xsn"
@@ -754,7 +754,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "hl7_source", primary_key: "hl7_source_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.text "description", limit: 255
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.string "uuid", limit: 38, null: false
     t.index ["creator"], name: "creator"
@@ -765,9 +765,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "form_id"
     t.string "name", limit: 100, null: false
     t.text "xml_data", limit: 16777215, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
     t.index ["changed_by"], name: "User who changed htmlformentry_htmlform"
@@ -809,7 +809,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "country", limit: 50
     t.string "latitude", limit: 50
     t.string "longitude", limit: 50
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.string "county_district", limit: 50
     t.string "neighborhood_cell", limit: 50
@@ -817,7 +817,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "subregion", limit: 50
     t.string "township_division", limit: 50
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.integer "location_type_id"
@@ -835,10 +835,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "location_tag", primary_key: "location_tag_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "name", limit: 50
     t.string "description"
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -864,12 +864,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "description", limit: 1000
     t.string "rule_content", limit: 2048, null: false
     t.string "language", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.index ["changed_by"], name: "changed_by for rule_definition"
@@ -879,9 +879,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   end
 
   create_table "logic_rule_token", primary_key: "logic_rule_token_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", default: "0002-11-30 00:00:00", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "token", limit: 512, null: false
     t.string "class_name", limit: 512, null: false
@@ -899,9 +899,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   end
 
   create_table "logic_token_registration", primary_key: "token_registration_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", default: "0002-11-30 00:00:00", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "token", limit: 512, null: false
     t.string "provider_class_name", limit: 512, null: false
@@ -919,7 +919,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["token_registration_id"], name: "token_registration_tag"
   end
 
-  create_table "merged_patients", primary_key: "patient_id", id: :integer, default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "merged_patients", primary_key: "patient_id", id: :bigint, default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "merged_to_id", null: false
   end
 
@@ -942,9 +942,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.float "pm"
     t.datetime "date_created"
     t.datetime "date_updated"
-    t.integer "creator"
+    t.bigint "creator"
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
   end
 
   create_table "moh_regimen_ingredient", primary_key: "ingredient_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -955,9 +955,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.float "max_weight"
     t.datetime "date_created"
     t.datetime "date_updated"
-    t.integer "creator"
+    t.bigint "creator"
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.integer "min_age"
     t.integer "max_age"
     t.string "gender", default: "MF"
@@ -971,9 +971,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.float "max_weight"
     t.datetime "date_created"
     t.datetime "date_updated"
-    t.integer "creator"
+    t.bigint "creator"
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
   end
 
   create_table "moh_regimen_ingredient_tb_treatment", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -985,9 +985,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.float "max_weight"
     t.datetime "date_created"
     t.datetime "date_updated"
-    t.integer "creator"
+    t.bigint "creator"
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
   end
 
   create_table "moh_regimen_lookup", primary_key: "regimen_lookup_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -996,9 +996,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "drug_inventory_id"
     t.datetime "date_created"
     t.datetime "date_updated"
-    t.integer "creator"
+    t.bigint "creator"
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
   end
 
   create_table "moh_regimens", primary_key: "regimen_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -1006,16 +1006,16 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.text "description"
     t.datetime "date_created"
     t.datetime "date_updated"
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
   end
 
   create_table "national_id", id: :integer, options: "ENGINE=MyISAM DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.string "national_id", limit: 30, default: "", null: false
     t.boolean "assigned", default: false, null: false
     t.boolean "eds", default: false
-    t.integer "creator"
+    t.bigint "creator"
     t.datetime "date_issued"
     t.text "issued_to"
   end
@@ -1027,15 +1027,15 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
 
   create_table "note", primary_key: "note_id", id: :integer, default: 0, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "note_type", limit: 50
-    t.integer "patient_id"
-    t.integer "obs_id"
-    t.integer "encounter_id"
+    t.bigint "patient_id"
+    t.bigint "obs_id"
+    t.bigint "encounter_id"
     t.text "text", null: false
     t.integer "priority"
     t.integer "parent"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
     t.index ["changed_by"], name: "user_who_changed_note"
@@ -1052,9 +1052,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "satisfied_by_any", default: 0, null: false
     t.integer "alert_read", default: 0, null: false
     t.datetime "date_to_expire"
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
     t.index ["changed_by"], name: "user_who_changed_alert"
@@ -1064,7 +1064,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
 
   create_table "notification_alert_recipient", primary_key: ["alert_id", "user_id"], options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "alert_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.integer "alert_read", default: 0, null: false
     t.timestamp "date_changed", default: -> { "CURRENT_TIMESTAMP" }
     t.string "uuid", limit: 38, null: false
@@ -1088,24 +1088,24 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.text "description"
     t.string "notification_response", null: false
     t.datetime "notification_datetime", null: false
-    t.integer "patient_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "patient_id", null: false
+    t.bigint "user_id", null: false
   end
 
   create_table "notification_tracker_user_activities", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_id", null: false
+    t.bigint "user_id", null: false
     t.datetime "login_datetime", null: false
     t.text "selected_activities"
   end
 
-  create_table "obs", primary_key: "obs_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "person_id", null: false
+  create_table "obs", primary_key: "obs_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "person_id", null: false
     t.integer "concept_id", default: 0, null: false
-    t.integer "encounter_id"
-    t.integer "order_id"
+    t.bigint "encounter_id"
+    t.bigint "order_id"
     t.datetime "obs_datetime", null: false
     t.integer "location_id"
-    t.integer "obs_group_id"
+    t.bigint "obs_group_id"
     t.string "accession_number"
     t.integer "value_group_id"
     t.boolean "value_boolean"
@@ -1119,10 +1119,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.datetime "date_started"
     t.datetime "date_stopped"
     t.string "comments"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "value_complex"
@@ -1143,12 +1143,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   end
 
   create_table "order_extension", primary_key: "order_extension_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "order_id", null: false
+    t.bigint "order_id", null: false
     t.string "value", limit: 50, default: "", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.index ["creator"], name: "user_who_created_ext"
@@ -1159,10 +1159,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "order_type", primary_key: "order_type_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.string "description", default: "", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -1172,27 +1172,27 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["uuid"], name: "order_type_uuid_index", unique: true
   end
 
-  create_table "orders", primary_key: "order_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "orders", primary_key: "order_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "order_type_id", default: 0, null: false
     t.integer "concept_id", default: 0, null: false
-    t.integer "orderer", default: 0
-    t.integer "encounter_id"
+    t.bigint "orderer", default: 0
+    t.bigint "encounter_id"
     t.text "instructions"
     t.datetime "start_date"
     t.datetime "auto_expire_date"
     t.integer "discontinued", limit: 2, default: 0, null: false
     t.datetime "discontinued_date"
-    t.integer "discontinued_by"
+    t.bigint "discontinued_by"
     t.integer "discontinued_reason"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
-    t.integer "patient_id", null: false
+    t.bigint "patient_id", null: false
     t.string "accession_number"
-    t.integer "obs_id"
+    t.bigint "obs_id"
     t.string "uuid", limit: 38, null: false
     t.string "discontinued_reason_non_coded"
     t.index ["creator"], name: "order_creator"
@@ -1212,14 +1212,14 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "patient", primary_key: "patient_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "patient", primary_key: "patient_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "tribe"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.index ["changed_by"], name: "user_who_changed_pat"
@@ -1229,8 +1229,8 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   end
 
   create_table "patient_defaulted_dates", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "patient_id"
-    t.integer "order_id"
+    t.bigint "patient_id"
+    t.bigint "order_id"
     t.integer "drug_id"
     t.float "equivalent_daily_dose"
     t.integer "amount_dispensed"
@@ -1242,15 +1242,15 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   end
 
   create_table "patient_identifier", primary_key: "patient_identifier_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "patient_id", default: 0, null: false
+    t.bigint "patient_id", default: 0, null: false
     t.string "identifier", limit: 50, default: "", null: false
     t.integer "identifier_type", default: 0, null: false
     t.integer "preferred", limit: 2, default: 0, null: false
     t.integer "location_id", default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -1268,13 +1268,13 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.text "description", null: false
     t.string "format", limit: 50
     t.integer "check_digit", limit: 2, default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "required", limit: 2, default: 0, null: false
     t.string "format_description"
     t.string "validator", limit: 200
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -1285,16 +1285,16 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   end
 
   create_table "patient_program", primary_key: "patient_program_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "patient_id", default: 0, null: false
+    t.bigint "patient_id", default: 0, null: false
     t.integer "program_id", default: 0, null: false
     t.datetime "date_enrolled"
     t.datetime "date_completed"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -1312,12 +1312,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "state", default: 0, null: false
     t.date "start_date"
     t.date "end_date"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -1336,12 +1336,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.boolean "enabled", null: false
     t.string "evaluator", null: false
     t.string "description", limit: 1000
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -1357,38 +1357,38 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "patientflags_tag", primary_key: "tag_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "tag", null: false
     t.string "description", limit: 1000
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
   end
 
-  create_table "patients_for_location", primary_key: "patient_id", id: :integer, default: nil, options: "ENGINE=MyISAM DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "patients_for_location", primary_key: "patient_id", id: :bigint, default: nil, options: "ENGINE=MyISAM DEFAULT CHARSET=utf8", force: :cascade do |t|
   end
 
   create_table "patients_to_merge", id: false, options: "ENGINE=MyISAM DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "patient_id"
+    t.bigint "patient_id"
     t.integer "to_merge_to_id"
   end
 
-  create_table "person", primary_key: "person_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "person", primary_key: "person_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "gender", limit: 50, default: ""
     t.date "birthdate"
     t.integer "birthdate_estimated", limit: 2, default: 0, null: false
     t.integer "dead", limit: 2, default: 0, null: false
     t.datetime "death_date"
     t.integer "cause_of_death"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -1401,8 +1401,8 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["voided_by"], name: "user_who_voided_patient"
   end
 
-  create_table "person_address", primary_key: "person_address_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "person_id"
+  create_table "person_address", primary_key: "person_address_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "person_id"
     t.integer "preferred", limit: 2, default: 0, null: false
     t.string "address1", limit: 50
     t.string "address2", limit: 50
@@ -1412,10 +1412,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "country", limit: 50
     t.string "latitude", limit: 50
     t.string "longitude", limit: 50
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "county_district", limit: 50
@@ -1431,16 +1431,16 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["voided_by"], name: "patient_address_void"
   end
 
-  create_table "person_attribute", primary_key: "person_attribute_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "person_id", default: 0, null: false
+  create_table "person_attribute", primary_key: "person_attribute_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "person_id", default: 0, null: false
     t.string "value", limit: 50, default: "", null: false
     t.integer "person_attribute_type_id", default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -1458,12 +1458,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "format", limit: 50
     t.integer "foreign_key"
     t.integer "searchable", limit: 2, default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "edit_privilege"
@@ -1481,7 +1481,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
 
   create_table "person_name", primary_key: "person_name_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "preferred", limit: 2, default: 0, null: false
-    t.integer "person_id"
+    t.bigint "person_id"
     t.string "prefix", limit: 50
     t.string "given_name", limit: 50
     t.string "middle_name", limit: 50
@@ -1490,13 +1490,13 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "family_name2", limit: 50
     t.string "family_name_suffix", limit: 50
     t.string "degree", limit: 50
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
     t.index ["creator"], name: "user_who_made_name"
@@ -1534,12 +1534,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "format", limit: 50
     t.integer "foreign_key"
     t.boolean "searchable"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason", limit: 225
   end
@@ -1554,12 +1554,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "value_text", limit: 15
     t.date "expiry_date"
     t.date "encounter_date", null: false
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "voided", default: false, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 225
   end
@@ -1572,9 +1572,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
 
   create_table "program", primary_key: "program_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "concept_id", default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "retired", limit: 2, default: 0, null: false
     t.string "name", limit: 50, null: false
@@ -1586,15 +1586,15 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["uuid"], name: "program_uuid_index", unique: true
   end
 
-  create_table "program_encounter", primary_key: "program_encounter_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "patient_id"
+  create_table "program_encounter", primary_key: "program_encounter_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+    t.bigint "patient_id"
     t.datetime "date_time"
     t.integer "program_id"
   end
 
   create_table "program_encounter_details", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "encounter_id"
-    t.integer "program_encounter_id"
+    t.bigint "encounter_id"
+    t.bigint "program_encounter_id"
     t.integer "program_id"
     t.integer "voided", default: 0
   end
@@ -1637,10 +1637,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "program_workflow", primary_key: "program_workflow_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "program_id", default: 0, null: false
     t.integer "concept_id", default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
     t.index ["changed_by"], name: "workflow_voided_by"
@@ -1655,10 +1655,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "concept_id", default: 0, null: false
     t.integer "initial", limit: 2, default: 0, null: false
     t.integer "terminal", limit: 2, default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
     t.index ["changed_by"], name: "state_voided_by"
@@ -1673,16 +1673,16 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "regimen_index", limit: 5
     t.float "min_weight", default: 0.0, null: false
     t.float "max_weight", default: 200.0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "retired", limit: 2, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.integer "program_id", default: 0, null: false
     t.index ["concept_id"], name: "map_concept"
   end
 
-  create_table "regimen_drug_order", primary_key: "regimen_drug_order_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "regimen_drug_order", primary_key: "regimen_drug_order_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "regimen_id", default: 0, null: false
     t.integer "drug_inventory_id", default: 0
     t.float "dose", limit: 53
@@ -1693,10 +1693,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.boolean "complex", default: false, null: false
     t.integer "quantity"
     t.text "instructions"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -1709,10 +1709,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
 
   create_table "region", primary_key: "region_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.index ["creator"], name: "user_who_created_region"
@@ -1725,14 +1725,14 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "relationship", primary_key: "relationship_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "person_a", null: false
+  create_table "relationship", primary_key: "relationship_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "person_a", null: false
     t.integer "relationship", default: 0, null: false
-    t.integer "person_b", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "person_b", null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38
@@ -1750,11 +1750,11 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "preferred", default: 0, null: false
     t.integer "weight", default: 0, null: false
     t.string "description", default: "", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.string "uuid", limit: 38, null: false
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.index ["creator"], name: "user_who_created_rel"
@@ -1765,7 +1765,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "report_def", primary_key: "report_def_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "name", limit: 16777215, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.index ["creator"], name: "User who created report_def"
   end
 
@@ -1775,12 +1775,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "report_object_type", null: false
     t.string "report_object_sub_type", null: false
     t.text "xml_data"
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
@@ -1805,12 +1805,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "report_definition_id", default: 0, null: false
     t.string "renderer_type", null: false
     t.text "properties"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.date "start_date"
@@ -1829,12 +1829,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "content_type", limit: 50
     t.string "extension", limit: 20
     t.binary "contents", limit: 4294967295
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "indicator_name"
@@ -1872,9 +1872,9 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "repeat_interval", default: 0, null: false
     t.integer "start_on_startup", default: 0, null: false
     t.integer "started", default: 0, null: false
-    t.integer "created_by", default: 0
+    t.bigint "created_by", default: 0
     t.datetime "date_created", default: "2005-01-01 00:00:00"
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
     t.datetime "last_execution_time"
@@ -1907,12 +1907,12 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.string "serialization_class", null: false
     t.text "serialized_data", null: false
     t.datetime "date_created", null: false
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_changed"
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.integer "retired", limit: 2, default: 0, null: false
     t.datetime "date_retired"
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.string "retire_reason", limit: 1000
     t.string "uuid", limit: 38, null: false
     t.index ["changed_by"], name: "serialized_object_changed_by"
@@ -1947,13 +1947,13 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.integer "has_order_type_id"
     t.integer "skip_if_has", limit: 2, default: 0
     t.float "sort_weight", limit: 53
-    t.integer "creator", null: false
+    t.bigint "creator", null: false
     t.datetime "date_created", null: false
     t.integer "voided", limit: 2, default: 0
-    t.integer "voided_by"
+    t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38
     t.index ["changed_by"], name: "user_who_changed_task"
@@ -1969,10 +1969,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "traditional_authority", primary_key: "traditional_authority_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "district_id", default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.index ["creator"], name: "user_who_created_traditional_authority"
@@ -1987,31 +1987,31 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   end
 
   create_table "user_property", primary_key: ["user_id", "property"], options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_id", default: 0, null: false
+    t.bigint "user_id", default: 0, null: false
     t.string "property", limit: 100, default: "", null: false
     t.string "property_value", default: "", null: false
   end
 
   create_table "user_role", primary_key: ["role", "user_id"], options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "user_id", default: 0, null: false
+    t.bigint "user_id", default: 0, null: false
     t.string "role", limit: 50, default: "", null: false
     t.index ["user_id"], name: "user_role"
   end
 
-  create_table "users", primary_key: "user_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "users", primary_key: "user_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "system_id", limit: 50, default: "", null: false
     t.string "username", limit: 50
     t.string "password", limit: 128
     t.string "salt", limit: 128
     t.string "secret_question"
     t.string "secret_answer"
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.timestamp "date_created", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.integer "changed_by"
+    t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "person_id"
+    t.bigint "person_id"
     t.integer "retired", limit: 1, default: 0, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.string "uuid", limit: 38, null: false
@@ -2043,10 +2043,10 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   create_table "village", primary_key: "village_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.integer "traditional_authority_id", default: 0, null: false
-    t.integer "creator", default: 0, null: false
+    t.bigint "creator", default: 0, null: false
     t.datetime "date_created", null: false
     t.boolean "retired", default: false, null: false
-    t.integer "retired_by"
+    t.bigint "retired_by"
     t.datetime "date_retired"
     t.string "retire_reason"
     t.index ["creator"], name: "user_who_created_village"
