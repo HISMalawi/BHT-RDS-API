@@ -9,7 +9,8 @@ class Patient < VoidableRecord
   self.table_name = 'patient'
   self.primary_key = 'patient_id'
 
-  has_one :person, foreign_key: :person_id
+  belongs_to :person, foreign_key: :person_id, optional: true
+
   has_many :patient_identifiers, foreign_key: :patient_id, dependent: :destroy
   has_many :patient_programs
   has_many :programs, through: :patient_programs
