@@ -36,32 +36,25 @@ class CouchSyncService
   end
 
   def load_updates
-    fetch_updates # Loads any incoming updates into queue
-
     ActiveRecord::Base.connection.execute('SET foreign_key_checks=0')
 
-    while (update = updates_queue.pop)
-      begin
-        doc = JSON.parse(update.doc)
-        model = update.doc_type.constantize
-        record = model.find_by("#{model.primary_key} = ?", doc[model.primary_key])
-        record = record ? record.update(doc) && record : model.create(doc)
-        if record.errors.empty?
-          LOGGER.info("Successfully saved #{model}(#{update.doc_id} => ##{record.id})")
-          update.destroy
-        else
-          LOGGER.error("Error loading #{model}(#{update.doc_id}) due to:\n\t#{record.errors.to_json} ~ #{update.doc}")
-          update.queue_count += 1
-          update.created_at = Time.now
-          update.save
-        end
-      rescue StandardError => e
-        LOGGER.error("Error loading #{update.doc_type}(#{update.doc_id}):")
-        LOGGER.error(e)
-        update.queue_count += 1
-        update.created_at = Time.now
-        update.save
+    couch_updates.each do |update|
+      doc_id, doc_type, doc = parse_couch_doc(update)
+
+      model = doc_type.constantize
+      record = model.find_by("#{model.primary_key} = ?", doc[model.primary_key])
+      record = record ? record.update(doc) && record : model.create(doc)
+
+      if record.errors.empty?
+        LOGGER.info("Successfully saved #{model}(#{doc_id} => ##{record.id})")
+      else
+        LOGGER.error("Error loading #{model}(#{doc_id}): #{doc} due to:\n\t#{record.errors.to_json} ~ #{doc}")
+        # TODO: Push update to error queue
       end
+    # rescue StandardError => e
+    #   LOGGER.error("Error loading #{doc_type}(#{doc_id}):")
+    #   LOGGER.error(e)
+    #   # TODO: Push update to error queue
     end
 
     ActiveRecord::Base.connection.execute('SET foreign_key_checks=1')
@@ -69,25 +62,41 @@ class CouchSyncService
 
   private
 
-  def fetch_updates
-    loop do
-      last_seq = load_last_seq
+  def couch_updates
+    Enumerator.new do |enum|
+      loop do
+        changes = read_couch_changes
 
-      response = handle_response do
-        url = "#{couch_database_url}/_changes?limit=#{MAX_COUCH_UPDATES_FETCHED}"
-        url = "#{url}&since=#{last_seq}" if last_seq
-        LOGGER.debug("Fetching changes from: #{url}")
-        RestClient.get(url)
+        break if changes.empty?
+
+        changes.each do |change|
+          enum.yield(fetch_couch_doc(change['id']))
+        end
       end
-
-      save_last_seq(response['last_seq'])
-
-      results = response['results']
-
-      break if results.empty?
-
-      queue_updates(results)
     end
+  end
+
+  def parse_couch_doc(couch_doc)
+    doc = couch_doc.dup
+    doc_id = doc.delete('_id')
+    doc_type = doc.delete('record_type')
+    doc.delete('_rev') # Don't need this field
+    [doc_id, doc_type, doc]
+  end
+
+  def read_couch_changes
+    last_seq = load_last_seq
+
+    response = handle_response do
+      url = "#{couch_database_url}/_changes?limit=#{MAX_COUCH_UPDATES_FETCHED}"
+      url = "#{url}&since=#{last_seq}" if last_seq
+      LOGGER.debug("Fetching changes from: #{url}")
+      RestClient.get(url)
+    end
+
+    save_last_seq(response['last_seq'])
+
+    response['results']
   end
 
   def couch_database_url
@@ -114,21 +123,11 @@ class CouchSyncService
     response
   end
 
-  def queue_updates(updates)
-    updates.each do |update|
-      next if updates_queue.include?(update['id'])
-
-      document = handle_response do
-        url = "#{couch_database_url}/#{update['id']}"
-        LOGGER.debug("Fetching document: #{url}")
-        RestClient.get(url)
-      end
-
-      document.delete('_rev')
-      doc_id = document.delete('_id')
-      type = document.delete('record_type')
-
-      updates_queue.push(doc_id, type, document)
+  def fetch_couch_doc(doc_id)
+    handle_response do
+      url = "#{couch_database_url}/#{doc_id}"
+      LOGGER.debug("Fetching document: #{url}")
+      RestClient.get(url)
     end
   end
 
