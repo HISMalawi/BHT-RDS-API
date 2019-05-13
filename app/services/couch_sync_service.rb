@@ -6,9 +6,10 @@ require 'rest-client'
 MAX_COUCH_UPDATES_FETCHED = 5000 # Maximum updates that can be fetched per request
 MAX_COUCH_UPDATE_QUEUE_COUNT = 10 # Maximum number of times an update can be (re-)queued
 
-class CouchSyncService
-  LOGGER = Logger.new(STDOUT)
+LOGGER = Logger.new(STDOUT)
+LOGGER.level = Logger::INFO
 
+class CouchSyncService
   class UpdatesQueue
     def push(doc_id, type, doc, queue_count = 0)
       LOGGER.debug("Queueing #{type}(#{doc_id}, doc: #{doc})")
