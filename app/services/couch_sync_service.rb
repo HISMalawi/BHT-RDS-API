@@ -2,6 +2,7 @@
 
 require 'logger'
 require 'rest-client'
+require 'securerandom'
 
 MAX_COUCH_UPDATES_FETCHED = 5000 # Maximum updates that can be fetched per request
 MAX_COUCH_UPDATE_QUEUE_COUNT = 10 # Maximum number of times an update can be (re-)queued
@@ -43,6 +44,18 @@ class CouchSyncService
       doc_id, doc_type, doc = parse_couch_doc(update)
 
       model = doc_type.constantize
+
+      # HACK: Remap conflicting uuids for the following 3 tables. These tables are
+      # preloaded with static metadata for users including uuids thus different
+      # sites have the same user with the same UUID.
+      if [User, Person, PersonName].include?(model) && model.where(uuid: doc['uuid']).exists?
+        LOGGER.debug("Remapping conflicting UUID (#{doc['uuid']}) for #{model}")
+        old_uuid = doc['uuid']
+        doc['uuid'] = SecureRandom.uuid
+        UUIDRemap.create(record_type: model.to_s, record_id: doc[model.primary_key.to_s],
+                         old_uuid: old_uuid, new_uuid: doc['uuid'])
+      end
+
       record = model.find_by("#{model.primary_key} = ?", doc[model.primary_key])
       record = record ? record.update(doc) && record : model.create(doc)
 
@@ -50,12 +63,7 @@ class CouchSyncService
         LOGGER.info("Successfully saved #{model}(#{doc_id} => ##{record.id})")
       else
         LOGGER.error("Error loading #{model}(#{doc_id}): #{doc} due to:\n\t#{record.errors.to_json} ~ #{doc}")
-        # TODO: Push update to error queue
       end
-    # rescue StandardError => e
-    #   LOGGER.error("Error loading #{doc_type}(#{doc_id}):")
-    #   LOGGER.error(e)
-    #   # TODO: Push update to error queue
     end
 
     ActiveRecord::Base.connection.execute('SET foreign_key_checks=1')

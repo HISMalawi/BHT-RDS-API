@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_04_22_155152) do
+ActiveRecord::Schema.define(version: 2019_05_16_082550) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
@@ -1241,7 +1241,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.date "date_created", default: "2019-04-09"
   end
 
-  create_table "patient_identifier", primary_key: "patient_identifier_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "patient_identifier", primary_key: "patient_identifier_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "patient_id", default: 0, null: false
     t.string "identifier", limit: 50, default: "", null: false
     t.integer "identifier_type", default: 0, null: false
@@ -1284,7 +1284,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["uuid"], name: "patient_identifier_type_uuid_index", unique: true
   end
 
-  create_table "patient_program", primary_key: "patient_program_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "patient_program", primary_key: "patient_program_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.bigint "patient_id", default: 0, null: false
     t.integer "program_id", default: 0, null: false
     t.datetime "date_enrolled"
@@ -1307,8 +1307,8 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["voided_by"], name: "user_who_voided_patient_program"
   end
 
-  create_table "patient_state", primary_key: "patient_state_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "patient_program_id", default: 0, null: false
+  create_table "patient_state", primary_key: "patient_state_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "patient_program_id", default: 0, null: false
     t.integer "state", default: 0, null: false
     t.date "start_date"
     t.date "end_date"
@@ -1479,7 +1479,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["uuid"], name: "person_attribute_type_uuid_index", unique: true
   end
 
-  create_table "person_name", primary_key: "person_name_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "person_name", primary_key: "person_name_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "preferred", limit: 2, default: 0, null: false
     t.bigint "person_id"
     t.string "prefix", limit: 50
@@ -1510,7 +1510,7 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
   end
 
   create_table "person_name_code", primary_key: "person_name_code_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.integer "person_name_id"
+    t.bigint "person_name_id"
     t.string "given_name_code", limit: 50
     t.string "middle_name_code", limit: 50
     t.string "family_name_code", limit: 50
@@ -2022,6 +2022,15 @@ ActiveRecord::Schema.define(version: 2019_04_22_155152) do
     t.index ["creator"], name: "user_creator"
     t.index ["person_id"], name: "person_id_for_user"
     t.index ["retired_by"], name: "user_who_retired_this_user"
+  end
+
+  create_table "uuid_remaps", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "record_type"
+    t.bigint "record_id"
+    t.string "old_uuid"
+    t.string "new_uuid"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "validation_results", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
