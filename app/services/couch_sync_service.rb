@@ -5,38 +5,11 @@ require 'rest-client'
 require 'securerandom'
 
 MAX_COUCH_UPDATES_FETCHED = 5000 # Maximum updates that can be fetched per request
-MAX_COUCH_UPDATE_QUEUE_COUNT = 10 # Maximum number of times an update can be (re-)queued
 
 LOGGER = Logger.new(STDOUT)
 LOGGER.level = Logger::INFO
 
 class CouchSyncService
-  class UpdatesQueue
-    def push(doc_id, type, doc, queue_count = 0)
-      LOGGER.debug("Queueing #{type}(#{doc_id}, doc: #{doc})")
-
-      CouchUpdate.create(doc_id: doc_id, doc_type: type,
-                         doc: doc.to_json, queue_count: queue_count,
-                         created_at: Time.now)
-    end
-
-    def pop
-      update = CouchUpdate.order(Arel.sql('queue_count ASC, created_at DESC')).first
-      return nil unless update
-
-      LOGGER.debug("Popped #{update.doc_type}(#{update.doc_id}) from queue")
-      update
-    end
-
-    def include?(doc_id)
-      CouchUpdate.where(doc_id: doc_id).exists?
-    end
-  end
-
-  def updates_queue
-    @updates_queue ||= UpdatesQueue.new
-  end
-
   def load_updates
     ActiveRecord::Base.connection.execute('SET foreign_key_checks=0')
 
