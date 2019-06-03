@@ -19,3 +19,15 @@ test:
 production:
   <<: *default
   database: bht_rds_production
+  
+ids_development:
+  <<: *default
+  database: ids_development
+
+ids_test:
+  <<: *default
+  database: ids_test
+
+ids_production:
+  <<: *default
+  url: <%= ENV['IDS_DATABASE_URL'] %>
