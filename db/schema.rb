@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_16_082550) do
+ActiveRecord::Schema.define(version: 2019_06_14_083921) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
@@ -462,6 +462,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.integer "prn", limit: 2, default: 0, null: false
     t.integer "complex", limit: 2, default: 0, null: false
     t.integer "quantity"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["drug_inventory_id"], name: "inventory_item"
   end
 
@@ -510,6 +512,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "program_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["changed_by"], name: "encounter_changed_by"
     t.index ["creator"], name: "encounter_creator"
     t.index ["encounter_datetime"], name: "encounter_datetime_idx"
@@ -1127,6 +1131,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.string "void_reason"
     t.string "value_complex"
     t.string "uuid", limit: 38, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["concept_id"], name: "obs_concept"
     t.index ["creator"], name: "obs_enterer"
     t.index ["encounter_id"], name: "encounter_observations"
@@ -1195,6 +1201,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.bigint "obs_id"
     t.string "uuid", limit: 38, null: false
     t.string "discontinued_reason_non_coded"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["creator"], name: "order_creator"
     t.index ["discontinued_by"], name: "user_who_discontinued_order"
     t.index ["discontinued_reason"], name: "discontinued_because"
@@ -1222,6 +1230,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["changed_by"], name: "user_who_changed_pat"
     t.index ["creator"], name: "user_who_created_patient"
     t.index ["tribe"], name: "belongs_to_tribe"
@@ -1254,6 +1264,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["creator"], name: "identifier_creator"
     t.index ["identifier"], name: "identifier_name"
     t.index ["identifier_type"], name: "defines_identifier_type"
@@ -1299,6 +1311,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
     t.integer "location_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["changed_by"], name: "user_who_changed"
     t.index ["creator"], name: "patient_program_creator"
     t.index ["patient_id"], name: "patient_in_program"
@@ -1321,6 +1335,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["changed_by"], name: "patient_state_changer"
     t.index ["creator"], name: "patient_state_creator"
     t.index ["patient_program_id"], name: "patient_program_for_state"
@@ -1392,6 +1408,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["birthdate"], name: "person_birthdate"
     t.index ["cause_of_death"], name: "person_died_because"
     t.index ["changed_by"], name: "user_who_changed_pat"
@@ -1424,6 +1442,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.string "subregion", limit: 50
     t.string "township_division", limit: 50
     t.string "uuid", limit: 38, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["creator"], name: "patient_address_creator"
     t.index ["date_created"], name: "index_date_created_on_person_address"
     t.index ["person_id"], name: "patient_addresses"
@@ -1444,6 +1464,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["changed_by"], name: "attribute_changer"
     t.index ["creator"], name: "attribute_creator"
     t.index ["person_attribute_type_id"], name: "defines_attribute_type"
@@ -1499,6 +1521,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["creator"], name: "user_who_made_name"
     t.index ["family_name"], name: "last_name"
     t.index ["family_name2"], name: "family_name2"
@@ -1526,6 +1550,17 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
   create_table "pharmacies", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "pharmacy_batches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "batch_number"
+    t.bigint "creator", null: false
+    t.datetime "date_created", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "date_changed"
+    t.boolean "voided"
+    t.bigint "voided_by"
+    t.string "void_reason"
+    t.datetime "date_voided"
   end
 
   create_table "pharmacy_encounter_type", primary_key: "pharmacy_encounter_type_id", id: :integer, options: "ENGINE=MyISAM DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -2018,6 +2053,8 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
     t.string "authentication_token"
     t.date "token_expiry_time"
     t.datetime "deactivated_on"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["changed_by"], name: "user_who_changed_user"
     t.index ["creator"], name: "user_creator"
     t.index ["person_id"], name: "person_id_for_user"
