@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_05_16_082550) do
+ActiveRecord::Schema.define(version: 2019_06_12_123153) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
@@ -1526,6 +1526,17 @@ ActiveRecord::Schema.define(version: 2019_05_16_082550) do
   create_table "pharmacies", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "pharmacy_batches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "batch_number"
+    t.bigint "creator", null: false
+    t.datetime "date_created", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "date_changed"
+    t.boolean "voided"
+    t.bigint "voided_by"
+    t.string "void_reason"
+    t.datetime "date_voided"
   end
 
   create_table "pharmacy_encounter_type", primary_key: "pharmacy_encounter_type_id", id: :integer, options: "ENGINE=MyISAM DEFAULT CHARSET=latin1", force: :cascade do |t|
