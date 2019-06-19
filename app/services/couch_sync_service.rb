@@ -30,7 +30,7 @@ class CouchSyncService
       end
 
       record = model.find_by("#{model.primary_key} = ?", doc[model.primary_key])
-      record = record ? record.update(doc) && record : model.create(doc)
+      record = record ? record.update(doc.tap { |doc| doc[:updated_at] = Time.now }) && record : model.create(doc)
 
       if record.errors.empty?
         LOGGER.info("Successfully saved #{model}(#{doc_id} => ##{record.id})")
