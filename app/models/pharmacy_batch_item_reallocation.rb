@@ -1,0 +1,2 @@
+class PharmacyBatchItemReallocation < ApplicationRecord
+end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_14_083921) do
+ActiveRecord::Schema.define(version: 2019_06_19_071427) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
@@ -1552,6 +1552,40 @@ ActiveRecord::Schema.define(version: 2019_06_14_083921) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "pharmacy_batch_item_reallocations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "reallocation_code"
+    t.bigint "batch_item_id"
+    t.float "quantity"
+    t.integer "location_id"
+    t.datetime "date_created"
+    t.bigint "creator"
+    t.boolean "voided"
+    t.bigint "voided_by"
+    t.datetime "date_voided"
+    t.bigint "changed_by"
+    t.datetime "date_changed", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "pharmacy_batch_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "pharmacy_batch_id"
+    t.integer "drug_id"
+    t.float "delivered_quantity"
+    t.float "current_quantity"
+    t.date "delivery_date"
+    t.date "expiry_date"
+    t.bigint "creator", null: false
+    t.datetime "date_created", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "date_changed", default: -> { "CURRENT_TIMESTAMP" }
+    t.boolean "voided"
+    t.bigint "voided_by"
+    t.string "void_reason"
+    t.datetime "date_voided"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "pharmacy_batches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "batch_number"
     t.bigint "creator", null: false
@@ -1579,7 +1613,7 @@ ActiveRecord::Schema.define(version: 2019_06_14_083921) do
     t.string "retire_reason", limit: 225
   end
 
-  create_table "pharmacy_obs", primary_key: "pharmacy_module_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "pharmacy_obs", primary_key: "pharmacy_module_id", id: :bigint, default: nil, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "pharmacy_encounter_type", default: 0, null: false
     t.integer "drug_id", default: 0, null: false
     t.float "value_numeric", limit: 53
@@ -1597,6 +1631,9 @@ ActiveRecord::Schema.define(version: 2019_06_14_083921) do
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 225
+    t.bigint "batch_item_id"
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "privilege", primary_key: "privilege", id: :string, limit: 50, default: "", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
