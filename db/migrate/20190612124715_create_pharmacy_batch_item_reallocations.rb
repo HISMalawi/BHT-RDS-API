@@ -12,6 +12,8 @@ class CreatePharmacyBatchItemReallocations < ActiveRecord::Migration[5.2]
       t.datetime :date_voided
       t.integer :changed_by, limit: 8
       t.datetime :date_changed, null: false, options: -> { 'DEFAULT NOW()' }
+
+      t.timestamps
     end
   end
 end

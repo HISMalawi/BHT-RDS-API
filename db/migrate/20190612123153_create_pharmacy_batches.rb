@@ -9,6 +9,8 @@ class CreatePharmacyBatches < ActiveRecord::Migration[5.2]
       t.integer :voided_by, limit: 8
       t.string :void_reason
       t.datetime :date_voided
+
+      t.timestamps
     end
   end
 end
