@@ -47,13 +47,15 @@ class CouchSyncService
   def couch_updates
     Enumerator.new do |enum|
       loop do
-        changes = read_couch_changes
+        changes, last_seq = read_couch_changes
 
         break if changes.empty?
 
         changes.each do |change|
           enum.yield(fetch_couch_doc(change['id']))
         end
+
+        save_last_seq(last_seq)
       end
     end
   end
@@ -76,9 +78,7 @@ class CouchSyncService
       RestClient.get(url)
     end
 
-    save_last_seq(response['last_seq'])
-
-    response['results']
+    [response['results'], response['last_seq']]
   end
 
   def couch_database_url
