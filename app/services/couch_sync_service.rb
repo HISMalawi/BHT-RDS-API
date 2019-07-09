@@ -8,6 +8,7 @@ MAX_COUCH_UPDATES_FETCHED = 5000 # Maximum updates that can be fetched per reque
 
 LOGGER = Logger.new(STDOUT)
 LOGGER.level = Logger::INFO
+# ActiveRecord::Base.logger = LOGGER
 
 class CouchSyncService
   def load_updates
@@ -18,10 +19,11 @@ class CouchSyncService
 
       model = doc_type.constantize
 
-      # HACK: Remap conflicting uuids for the following 3 tables. These tables are
-      # preloaded with static metadata for users including uuids thus different
-      # sites have the same user with the same UUID.
-      if [User, Person, PersonName].include?(model) && model.where(uuid: doc['uuid']).exists?
+      # HACK: Remap conflicting uuids. Most tables are preloaded with static metadata
+      # for users (and other entities) including uuids thus different sites have
+      # the same entities with the same UUID.
+      LOGGER.debug("Has uuid: #{model.column_names.include?('uuid')}")
+      if model.column_names.include?('uuid') && model.unscoped.where(uuid: doc['uuid']).exists?
         LOGGER.debug("Remapping conflicting UUID (#{doc['uuid']}) for #{model}")
         old_uuid = doc['uuid']
         doc['uuid'] = SecureRandom.uuid
