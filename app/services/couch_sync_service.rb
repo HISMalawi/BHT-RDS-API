@@ -11,33 +11,34 @@ LOGGER.level = Logger::INFO
 # ActiveRecord::Base.logger = LOGGER
 
 class CouchSyncService
+  class CouchSyncServiceError < StandardError; end
+
   def load_updates
     ActiveRecord::Base.connection.execute('SET foreign_key_checks=0')
 
     couch_updates.each do |update|
       doc_id, doc_type, doc = parse_couch_doc(update)
 
-      model = doc_type.constantize
+      begin
+        model = model_from_doc_type(doc_type)
 
-      # HACK: Remap conflicting uuids. Most tables are preloaded with static metadata
-      # for users (and other entities) including uuids thus different sites have
-      # the same entities with the same UUID.
-      LOGGER.debug("Has uuid: #{model.column_names.include?('uuid')}")
-      if model.column_names.include?('uuid') && model.unscoped.where(uuid: doc['uuid']).exists?
-        LOGGER.debug("Remapping conflicting UUID (#{doc['uuid']}) for #{model}")
-        old_uuid = doc['uuid']
-        doc['uuid'] = SecureRandom.uuid
-        UUIDRemap.create(record_type: model.to_s, record_id: doc[model.primary_key.to_s],
-                         old_uuid: old_uuid, new_uuid: doc['uuid'])
-      end
+        # HACK: Remap conflicting uuids. Most tables are preloaded with static
+        # metadata for users (and other entities) including uuids thus different
+        # sites have the same entities with the same UUID.
+        remap_model_uuid(model, doc) if model_uuid_exists(model, doc)
 
-      record = model.find_by("#{model.primary_key} = ?", doc[model.primary_key])
-      record = record ? record.update(doc.tap { |doc| doc[:updated_at] = Time.now }) && record : model.create(doc)
-
-      if record.errors.empty?
-        LOGGER.info("Successfully saved #{model}(#{doc_id} => ##{record.id})")
-      else
-        LOGGER.error("Error loading #{model}(#{doc_id}): #{doc} due to:\n\t#{record.errors.to_json} ~ #{doc}")
+        record = update_or_create_record(model, doc)
+        if record.errors.empty?
+          LOGGER.info("Successfully saved #{model}(#{doc_id} => ##{record.id})")
+        else
+          LOGGER.error("Failed to save #{model}(#{doc}) due to #{record.as_json}")
+          log_model_error(model, doc_id, doc, exception: nil,
+                                              message: 'Could not save record',
+                                              model_errors: record.errors.as_json)
+        end
+      rescue CouchSyncServiceError, ActiveRecord::ActiveRecordError => e
+        LOGGER.error("Failed to save #{model}(#{doc}) due to #{e}")
+        log_model_error(model, doc_id, doc, exception: e.class.to_s, message: e.message)
       end
     end
 
@@ -60,6 +61,44 @@ class CouchSyncService
         save_last_seq(last_seq)
       end
     end
+  end
+
+  def model_from_doc_type(doc_type)
+    doc_type.constantize
+  rescue NameError
+    raise CouchSyncServiceError, "Invalid model type: #{doc_type}"
+  end
+
+  def update_or_create_record(model, data)
+    LOGGER.debug("Creating record #{model}(#{data})")
+    record = model.find_by("#{model.primary_key} = ?", data[model.primary_key])
+
+    return model.create(data) unless record
+
+    LOGGER.debug("Record exists: updating #{model}(##{data[model.primary_key]})")
+    data['updated_at'] = Time.now
+    record.update(data)
+    record
+  end
+
+  def log_model_error(model, doc_id, record, error)
+    File.open(Rails.root.join('log', 'couch-update-errors.log'), 'a') do |log_file|
+      log = { doc_id => { 'model' => model.to_s, 'record' => record, 'error' => error } }
+      LOGGER.debug("Logging error to log file: #{log}")
+      log_file.write(log.to_yaml)
+    end
+  end
+
+  def model_uuid_exists(model, doc)
+    model.column_names.include?('uuid') && model.unscoped.where(uuid: doc['uuid']).exists?
+  end
+
+  def remap_model_uuid(model, doc)
+    LOGGER.debug("Remapping conflicting UUID (#{doc['uuid']}) for #{model}")
+    old_uuid = doc['uuid']
+    doc['uuid'] = SecureRandom.uuid
+    UUIDRemap.create(record_type: model.to_s, record_id: doc[model.primary_key.to_s],
+                     old_uuid: old_uuid, new_uuid: doc['uuid'])
   end
 
   def parse_couch_doc(couch_doc)
