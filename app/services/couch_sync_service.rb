@@ -36,7 +36,8 @@ class CouchSyncService
                                               message: 'Could not save record',
                                               model_errors: record.errors.as_json)
         end
-      rescue CouchSyncServiceError, ActiveRecord::ActiveRecordError => e
+      # rescue CouchSyncServiceError, ActiveRecord::ActiveRecordError => e
+      rescue StandardError => e
         LOGGER.error("Failed to save #{model}(#{doc}) due to #{e}")
         log_model_error(model, doc_id, doc, exception: e.class.to_s, message: e.message)
       end
