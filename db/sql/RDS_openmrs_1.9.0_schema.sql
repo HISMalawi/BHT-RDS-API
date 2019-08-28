@@ -2219,7 +2219,7 @@ DROP TABLE IF EXISTS `patient`;
 CREATE TABLE `patient` (
   `patient_id` bigint NOT NULL,
   `creator` bigint NOT NULL DEFAULT '0',
-  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_created` datetime NOT NULL DEFAULT '1900-01-01 00:00:00',
   `changed_by` bigint DEFAULT NULL,
   `date_changed` datetime DEFAULT NULL,
   `voided` tinyint(1) NOT NULL DEFAULT '0',
@@ -2253,7 +2253,7 @@ CREATE TABLE `patient_identifier` (
   `preferred` tinyint(1) NOT NULL DEFAULT '0',
   `location_id` int(11) DEFAULT NULL,
   `creator` bigint NOT NULL DEFAULT '0',
-  `date_created` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `date_created` datetime NOT NULL DEFAULT '1900-01-01 00:00:00',
   `voided` tinyint(1) NOT NULL DEFAULT '0',
   `voided_by` bigint DEFAULT NULL,
   `date_voided` datetime DEFAULT NULL,

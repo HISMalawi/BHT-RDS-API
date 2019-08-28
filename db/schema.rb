@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_06_19_071427) do
+ActiveRecord::Schema.define(version: 2019_07_02_191113) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
@@ -385,7 +385,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "name", default: "", null: false
     t.integer "region_id", default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.boolean "retired", default: false, null: false
     t.bigint "retired_by"
     t.datetime "date_retired"
@@ -501,9 +501,9 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.bigint "provider_id", default: 0, null: false
     t.integer "location_id"
     t.integer "form_id"
-    t.datetime "encounter_datetime", null: false
+    t.datetime "encounter_datetime", default: "1900-01-01 00:00:00", null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", limit: 2, default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
@@ -562,7 +562,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.text "default_value"
     t.integer "select_multiple", limit: 2, default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "retired", limit: 2, default: 0, null: false
@@ -583,7 +583,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "field_id", default: 0, null: false
     t.integer "answer_id", default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.string "uuid", limit: 38, null: false
     t.index ["answer_id"], name: "field_answer_concept"
     t.index ["creator"], name: "user_who_created_field_answer"
@@ -596,7 +596,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.text "description", limit: 4294967295
     t.integer "is_set", limit: 2, default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.string "uuid", limit: 38, null: false
     t.index ["creator"], name: "user_who_created_field_type"
     t.index ["uuid"], name: "field_type_uuid_index", unique: true
@@ -612,7 +612,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.text "template", limit: 16777215
     t.text "xslt", limit: 16777215
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "retired", limit: 2, default: 0, null: false
@@ -653,7 +653,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.float "sort_weight"
     t.string "uuid", limit: 38, null: false
     t.index ["changed_by"], name: "user_who_last_changed_form_field"
@@ -666,7 +666,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
 
   create_table "formentry_archive", primary_key: "formentry_archive_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "form_data", limit: 16777215, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "creator", default: 0, null: false
     t.index ["creator"], name: "User who created formentry_archive"
   end
@@ -676,21 +676,21 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "error", default: "", null: false
     t.text "error_details"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.index ["creator"], name: "User who created formentry_error"
   end
 
   create_table "formentry_queue", primary_key: "formentry_queue_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.text "form_data", limit: 16777215, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
   end
 
   create_table "formentry_xsn", primary_key: "formentry_xsn_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "form_id", null: false
     t.binary "xsn_data", limit: 4294967295, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "archived", default: 0, null: false
     t.bigint "archived_by"
     t.datetime "date_archived"
@@ -724,7 +724,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "hl7_source", default: 0, null: false
     t.string "hl7_source_key"
     t.text "hl7_data", limit: 16777215, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "message_state", default: 2
     t.string "uuid", limit: 38, null: false
     t.index ["message_state"], name: "hl7_in_archive_message_state_idx"
@@ -737,7 +737,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.text "hl7_data", limit: 16777215, null: false
     t.string "error", default: "", null: false
     t.text "error_details"
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.string "uuid", limit: 38, null: false
     t.index ["uuid"], name: "hl7_in_error_uuid_index", unique: true
   end
@@ -759,7 +759,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "name", default: "", null: false
     t.text "description", limit: 255
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.string "uuid", limit: 38, null: false
     t.index ["creator"], name: "creator"
     t.index ["uuid"], name: "hl7_source_uuid_index", unique: true
@@ -770,7 +770,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "name", limit: 100, null: false
     t.text "xml_data", limit: 16777215, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
@@ -869,7 +869,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "rule_content", limit: 2048, null: false
     t.string "language", null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
@@ -1038,7 +1038,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "priority"
     t.integer "parent"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
@@ -1057,7 +1057,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "alert_read", default: 0, null: false
     t.datetime "date_to_expire"
     t.bigint "creator", null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.string "uuid", limit: 38, null: false
@@ -1107,7 +1107,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "concept_id", default: 0, null: false
     t.bigint "encounter_id"
     t.bigint "order_id"
-    t.datetime "obs_datetime", null: false
+    t.datetime "obs_datetime", default: "1900-01-01 00:00:00", null: false
     t.integer "location_id"
     t.bigint "obs_group_id"
     t.string "accession_number"
@@ -1124,7 +1124,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.datetime "date_stopped"
     t.string "comments"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", limit: 2, default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
@@ -1223,7 +1223,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
   create_table "patient", primary_key: "patient_id", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "tribe"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
@@ -1258,7 +1258,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "preferred", limit: 2, default: 0, null: false
     t.integer "location_id", default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", limit: 2, default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
@@ -1281,7 +1281,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "format", limit: 50
     t.integer "check_digit", limit: 2, default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "required", limit: 2, default: 0, null: false
     t.string "format_description"
     t.string "validator", limit: 200
@@ -1327,7 +1327,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.date "start_date"
     t.date "end_date"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
@@ -1400,7 +1400,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.datetime "death_date"
     t.integer "cause_of_death"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
@@ -1431,7 +1431,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "latitude", limit: 50
     t.string "longitude", limit: 50
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", limit: 2, default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
@@ -1456,7 +1456,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "value", limit: 50, default: "", null: false
     t.integer "person_attribute_type_id", default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.integer "voided", limit: 2, default: 0, null: false
@@ -1513,7 +1513,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "family_name_suffix", limit: 50
     t.string "degree", limit: 50
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", limit: 2, default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
@@ -1595,6 +1595,8 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.bigint "voided_by"
     t.string "void_reason"
     t.datetime "date_voided"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "pharmacy_encounter_type", primary_key: "pharmacy_encounter_type_id", id: :integer, options: "ENGINE=MyISAM DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -1604,7 +1606,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "foreign_key"
     t.boolean "searchable"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "retired", default: false, null: false
@@ -1622,9 +1624,9 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "value_coded"
     t.string "value_text", limit: 15
     t.date "expiry_date"
-    t.date "encounter_date", null: false
+    t.date "encounter_date", default: "1900-01-01", null: false
     t.bigint "creator", null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
     t.boolean "voided", default: false, null: false
@@ -1746,7 +1748,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.float "min_weight", default: 0.0, null: false
     t.float "max_weight", default: 200.0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "retired", limit: 2, default: 0, null: false
     t.bigint "retired_by"
     t.datetime "date_retired"
@@ -1766,7 +1768,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "quantity"
     t.text "instructions"
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", limit: 2, default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
@@ -1782,7 +1784,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
   create_table "region", primary_key: "region_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name", default: "", null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.boolean "retired", default: false, null: false
     t.bigint "retired_by"
     t.datetime "date_retired"
@@ -1802,12 +1804,14 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.integer "relationship", default: 0, null: false
     t.bigint "person_b", null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", limit: 2, default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason"
     t.string "uuid", limit: 38
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.index ["creator"], name: "relation_creator"
     t.index ["person_a"], name: "related_person"
     t.index ["person_b"], name: "related_relative"
@@ -2042,7 +2046,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "name", default: "", null: false
     t.integer "district_id", default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.boolean "retired", default: false, null: false
     t.bigint "retired_by"
     t.datetime "date_retired"
@@ -2127,7 +2131,7 @@ ActiveRecord::Schema.define(version: 2019_06_19_071427) do
     t.string "name", default: "", null: false
     t.integer "traditional_authority_id", default: 0, null: false
     t.bigint "creator", default: 0, null: false
-    t.datetime "date_created", null: false
+    t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.boolean "retired", default: false, null: false
     t.bigint "retired_by"
     t.datetime "date_retired"
