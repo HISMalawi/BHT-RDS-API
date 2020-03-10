@@ -11,14 +11,14 @@ namespace :app do
   ].freeze
 
   task :setup do
-    LOGGER.warn('This action will clobber your database, Are you sure you want to continue: Y/N [N]> ')
-    while (reply = STDIN.gets.strip)
-      exit(0) if reply.blank? || reply.match?(/(N|No)/i)
+    # LOGGER.warn('This action will clobber your database, Are you sure you want to continue: Y/N [N]> ')
+    # while (reply = STDIN.gets.strip)
+    #   exit(0) if reply.blank? || reply.match?(/(N|No)/i)
 
-      break if reply.match?(/(Y|Yes)/i)
+    #   break if reply.match?(/(Y|Yes)/i)
 
-      LOGGER.error('Invalid response: Y/N [N]> ')
-    end
+    #   LOGGER.error('Invalid response: Y/N [N]> ')
+    # end
 
     next if system('rails db:drop db:create app:db_setup db:migrate app:clear_log')
 
@@ -51,8 +51,9 @@ namespace :app do
     username = db_config['username']
     password = db_config['password']
     database = db_config['database']
+    host     = db_config['host']
 
-    "mysql -v -u #{username} --password=#{password} #{database} < #{script_path}"
+    "psql -h #{host} -U #{username} #{database} < #{script_path}"
   end
 
   def db_config
