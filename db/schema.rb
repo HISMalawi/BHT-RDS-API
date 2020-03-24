@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "comments", limit: 255
     t.bigint "creator", null: false
     t.datetime "date_created", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -69,7 +69,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "description", limit: 1000
     t.bigint "creator", null: false
     t.datetime "date_created", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -401,7 +401,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created"
     t.datetime "date_updated"
     t.bigint "creator"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
   end
 
@@ -423,7 +423,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "encounter_datetime", default: "1900-01-01 00:00:00", null: false
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -796,7 +796,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created"
     t.datetime "date_updated"
     t.bigint "creator"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
   end
 
@@ -809,7 +809,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created"
     t.datetime "date_updated"
     t.bigint "creator"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.integer "min_age"
     t.integer "max_age"
@@ -825,7 +825,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created"
     t.datetime "date_updated"
     t.bigint "creator"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
   end
 
@@ -839,7 +839,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created"
     t.datetime "date_updated"
     t.bigint "creator"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
   end
 
@@ -850,7 +850,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created"
     t.datetime "date_updated"
     t.bigint "creator"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
   end
 
@@ -860,7 +860,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created"
     t.datetime "date_updated"
     t.bigint "creator", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
   end
 
@@ -964,7 +964,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "comments", limit: 255
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -980,7 +980,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "value", limit: 50, default: "", null: false
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1013,7 +1013,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.integer "discontinued_reason"
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1038,7 +1038,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1067,7 +1067,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.integer "location_id", default: 0, null: false
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1104,7 +1104,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1124,7 +1124,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1190,7 +1190,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1213,7 +1213,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "longitude", limit: 50
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1236,7 +1236,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1279,7 +1279,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "degree", limit: 50
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1382,7 +1382,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 225
@@ -1500,7 +1500,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.text "instructions"
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1529,7 +1529,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.bigint "person_b", null: false
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
@@ -1571,7 +1571,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_created", null: false
     t.bigint "changed_by"
     t.datetime "date_changed"
-    t.integer "voided", limit: 2, default: 0, null: false
+    t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
