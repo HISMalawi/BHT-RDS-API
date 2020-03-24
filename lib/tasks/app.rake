@@ -53,7 +53,7 @@ namespace :app do
     database = db_config['database']
     host     = db_config['host']
 
-    "psql -h #{host} -U #{username} #{database} < #{script_path}"
+    "PGPASSWORD=#{password} psql -h #{host} -U #{username} #{database} < #{script_path}"
   end
 
   def db_config
