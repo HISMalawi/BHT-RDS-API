@@ -34,18 +34,18 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "active_list_allergy", primary_key: "active_list_id", force: :cascade do |t|
-    t.string "allergy_type", limit: 50
+    t.string "allergy_type", limit: 255
     t.integer "reaction_concept_id"
-    t.string "severity", limit: 50
+    t.string "severity", limit: 255
   end
 
   create_table "active_list_problem", primary_key: "active_list_id", force: :cascade do |t|
-    t.string "status", limit: 50
+    t.string "status", limit: 255
     t.float "sort_weight"
   end
 
   create_table "active_list_type", primary_key: "active_list_type_id", force: :cascade do |t|
-    t.string "name", limit: 50, null: false
+    t.string "name", limit: 255, null: false
     t.string "description", limit: 255
     t.bigint "creator", null: false
     t.datetime "date_created", null: false
@@ -461,8 +461,8 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.text "description"
     t.integer "field_type"
     t.integer "concept_id"
-    t.string "table_name", limit: 50
-    t.string "attribute_name", limit: 50
+    t.string "table_name", limit: 255
+    t.string "attribute_name", limit: 255
     t.text "default_value"
     t.integer "select_multiple", limit: 2, default: 0, null: false
     t.bigint "creator", default: 0, null: false
@@ -486,7 +486,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "field_type", primary_key: "field_type_id", force: :cascade do |t|
-    t.string "name", limit: 50
+    t.string "name", limit: 255
     t.text "description"
     t.integer "is_set", limit: 2, default: 0, null: false
     t.bigint "creator", default: 0, null: false
@@ -496,7 +496,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
 
   create_table "form", primary_key: "form_id", force: :cascade do |t|
     t.string "name", limit: 255, default: "", null: false
-    t.string "version", limit: 50, default: "", null: false
+    t.string "version", limit: 255, default: "", null: false
     t.integer "build"
     t.integer "published", limit: 2, default: 0, null: false
     t.text "description"
@@ -699,7 +699,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "location_tag", primary_key: "location_tag_id", force: :cascade do |t|
-    t.string "name", limit: 50
+    t.string "name", limit: 255
     t.string "description", limit: 255
     t.bigint "creator", null: false
     t.datetime "date_created", null: false
@@ -879,7 +879,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "note", primary_key: "note_id", id: :integer, default: 0, force: :cascade do |t|
-    t.string "note_type", limit: 50
+    t.string "note_type", limit: 255
     t.bigint "patient_id"
     t.bigint "obs_id"
     t.bigint "encounter_id"
@@ -916,7 +916,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "notification_template", primary_key: "template_id", force: :cascade do |t|
-    t.string "name", limit: 50
+    t.string "name", limit: 255
     t.text "template"
     t.string "subject", limit: 100
     t.string "sender", limit: 255
@@ -977,7 +977,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
 
   create_table "order_extension", primary_key: "order_extension_id", force: :cascade do |t|
     t.bigint "order_id", null: false
-    t.string "value", limit: 50, default: "", null: false
+    t.string "value", limit: 255, default: "", null: false
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", default: 0, null: false
@@ -1061,7 +1061,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
 
   create_table "patient_identifier", primary_key: "patient_identifier_id", force: :cascade do |t|
     t.bigint "patient_id", default: 0, null: false
-    t.string "identifier", limit: 50, default: "", null: false
+    t.string "identifier", limit: 255, default: "", null: false
     t.integer "identifier_type", default: 0, null: false
     t.integer "preferred", limit: 2, default: 0, null: false
     t.integer "location_id", default: 0, null: false
@@ -1180,7 +1180,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "person", primary_key: "person_id", force: :cascade do |t|
-    t.string "gender", limit: 50, default: ""
+    t.string "gender", limit: 255, default: ""
     t.date "birthdate"
     t.integer "birthdate_estimated", limit: 2, default: 0, null: false
     t.integer "dead", limit: 2, default: 0, null: false
@@ -1203,25 +1203,25 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   create_table "person_address", primary_key: "person_address_id", force: :cascade do |t|
     t.bigint "person_id"
     t.integer "preferred", limit: 2, default: 0, null: false
-    t.string "address1", limit: 50
-    t.string "address2", limit: 50
-    t.string "city_village", limit: 50
-    t.string "state_province", limit: 50
-    t.string "postal_code", limit: 50
-    t.string "country", limit: 50
-    t.string "latitude", limit: 50
-    t.string "longitude", limit: 50
+    t.string "address1", limit: 255
+    t.string "address2", limit: 255
+    t.string "city_village", limit: 255
+    t.string "state_province", limit: 255
+    t.string "postal_code", limit: 255
+    t.string "country", limit: 255
+    t.string "latitude", limit: 255
+    t.string "longitude", limit: 255
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", default: 0, null: false
     t.bigint "voided_by"
     t.datetime "date_voided"
     t.string "void_reason", limit: 255
-    t.string "county_district", limit: 50
-    t.string "neighborhood_cell", limit: 50
-    t.string "region", limit: 50
-    t.string "subregion", limit: 50
-    t.string "township_division", limit: 50
+    t.string "county_district", limit: 255
+    t.string "neighborhood_cell", limit: 255
+    t.string "region", limit: 255
+    t.string "subregion", limit: 255
+    t.string "township_division", limit: 255
     t.string "uuid", limit: 38, null: false
     t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
     t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
@@ -1230,7 +1230,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
 
   create_table "person_attribute", primary_key: "person_attribute_id", force: :cascade do |t|
     t.bigint "person_id", default: 0, null: false
-    t.string "value", limit: 50, default: "", null: false
+    t.string "value", limit: 255, default: "", null: false
     t.integer "person_attribute_type_id", default: 0, null: false
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
@@ -1269,14 +1269,14 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   create_table "person_name", primary_key: "person_name_id", force: :cascade do |t|
     t.integer "preferred", limit: 2, default: 0, null: false
     t.bigint "person_id"
-    t.string "prefix", limit: 50
-    t.string "given_name", limit: 50
-    t.string "middle_name", limit: 50
-    t.string "family_name_prefix", limit: 50
-    t.string "family_name", limit: 50
-    t.string "family_name2", limit: 50
-    t.string "family_name_suffix", limit: 50
-    t.string "degree", limit: 50
+    t.string "prefix", limit: 255
+    t.string "given_name", limit: 255
+    t.string "middle_name", limit: 255
+    t.string "family_name_prefix", limit: 255
+    t.string "family_name", limit: 255
+    t.string "family_name2", limit: 255
+    t.string "family_name_suffix", limit: 255
+    t.string "degree", limit: 255
     t.bigint "creator", default: 0, null: false
     t.datetime "date_created", default: "1900-01-01 00:00:00", null: false
     t.integer "voided", default: 0, null: false
@@ -1293,11 +1293,11 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
 
   create_table "person_name_code", primary_key: "person_name_code_id", force: :cascade do |t|
     t.bigint "person_name_id"
-    t.string "given_name_code", limit: 50
-    t.string "middle_name_code", limit: 50
-    t.string "family_name_code", limit: 50
-    t.string "family_name2_code", limit: 50
-    t.string "family_name_suffix_code", limit: 50
+    t.string "given_name_code", limit: 255
+    t.string "middle_name_code", limit: 255
+    t.string "family_name_code", limit: 255
+    t.string "family_name2_code", limit: 255
+    t.string "family_name_suffix_code", limit: 255
   end
 
   create_table "pharmacies", force: :cascade do |t|
@@ -1353,9 +1353,9 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "pharmacy_encounter_type", primary_key: "pharmacy_encounter_type_id", force: :cascade do |t|
-    t.string "name", limit: 50, null: false
+    t.string "name", limit: 255, null: false
     t.text "description", null: false
-    t.string "format", limit: 50
+    t.string "format", limit: 255
     t.integer "foreign_key"
     t.integer "searchable", limit: 2
     t.bigint "creator", default: 0, null: false
@@ -1611,7 +1611,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "name", limit: 255, null: false
     t.string "description", limit: 1000
     t.integer "report_design_id", default: 0, null: false
-    t.string "content_type", limit: 50
+    t.string "content_type", limit: 255
     t.string "extension", limit: 20
     t.binary "contents"
     t.bigint "creator", default: 0, null: false
@@ -1633,12 +1633,12 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "role_privilege", primary_key: ["privilege", "role"], force: :cascade do |t|
-    t.string "role", limit: 50, default: "", null: false
-    t.string "privilege", limit: 50, default: "", null: false
+    t.string "role", limit: 255, default: "", null: false
+    t.string "privilege", limit: 255, default: "", null: false
   end
 
   create_table "role_role", primary_key: ["parent_role", "child_role"], force: :cascade do |t|
-    t.string "parent_role", limit: 50, default: "", null: false
+    t.string "parent_role", limit: 255, default: "", null: false
     t.string "child_role", limit: 255, default: "", null: false
   end
 
@@ -1647,7 +1647,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "description", limit: 1024
     t.text "schedulable_class"
     t.datetime "start_time"
-    t.string "start_time_pattern", limit: 50
+    t.string "start_time_pattern", limit: 255
     t.integer "repeat_interval", default: 0, null: false
     t.integer "start_on_startup", default: 0, null: false
     t.integer "started", default: 0, null: false
@@ -1705,7 +1705,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.string "encounter_type", limit: 255
     t.text "description"
     t.string "location", limit: 255
-    t.string "gender", limit: 50
+    t.string "gender", limit: 255
     t.integer "has_obs_concept_id"
     t.integer "has_obs_value_coded"
     t.integer "has_obs_value_drug"
@@ -1748,7 +1748,7 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
 
   create_table "tribe", primary_key: "tribe_id", force: :cascade do |t|
     t.integer "retired", limit: 2, default: 0, null: false
-    t.string "name", limit: 50, default: "", null: false
+    t.string "name", limit: 255, default: "", null: false
   end
 
   create_table "user_property", primary_key: ["user_id", "property"], force: :cascade do |t|
@@ -1759,12 +1759,12 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
 
   create_table "user_role", primary_key: ["role", "user_id"], force: :cascade do |t|
     t.bigint "user_id", default: 0, null: false
-    t.string "role", limit: 50, default: "", null: false
+    t.string "role", limit: 255, default: "", null: false
   end
 
   create_table "users", primary_key: "user_id", force: :cascade do |t|
-    t.string "system_id", limit: 50, default: "", null: false
-    t.string "username", limit: 50
+    t.string "system_id", limit: 255, default: "", null: false
+    t.string "username", limit: 255
     t.string "password", limit: 128
     t.string "salt", limit: 128
     t.string "secret_question", limit: 255
