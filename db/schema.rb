@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_07_02_191113) do
+ActiveRecord::Schema.define(version: 2020_06_19_065457) do
 
   create_table "active_list", primary_key: "active_list_id", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
     t.integer "active_list_type_id", null: false
@@ -1548,8 +1548,8 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
   end
 
   create_table "pharmacies", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "pharmacy_batch_item_reallocations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -1564,8 +1564,8 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.datetime "date_voided"
     t.bigint "changed_by"
     t.datetime "date_changed", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "pharmacy_batch_items", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -1582,8 +1582,8 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.bigint "voided_by"
     t.string "void_reason"
     t.datetime "date_voided"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "pharmacy_batches", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -1595,8 +1595,8 @@ ActiveRecord::Schema.define(version: 2019_07_02_191113) do
     t.bigint "voided_by"
     t.string "void_reason"
     t.datetime "date_voided"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.datetime "updated_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
   end
 
   create_table "pharmacy_encounter_type", primary_key: "pharmacy_encounter_type_id", id: :integer, options: "ENGINE=MyISAM DEFAULT CHARSET=latin1", force: :cascade do |t|
