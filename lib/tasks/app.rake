@@ -7,7 +7,8 @@ namespace :app do
   # SQL Scripts for database setup
   SQL_SCRIPTS = [
     'openmrs_1.7.0_schema.sql',
-    'openmrs_metadata_1_7.sql'
+    'openmrs_metadata_1_7.sql',
+    'bart2_views_schema_additions.sql'
   ].freeze
 
   task :setup do
