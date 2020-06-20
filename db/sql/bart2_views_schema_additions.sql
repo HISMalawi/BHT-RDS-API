@@ -1,7 +1,7 @@
 
 -- Host: localhost    Database: bart2
 -- ------------------------------------------------------
--- Server version	5.1.54-1ubuntu4-log
+-- Server version 5.1.54-1ubuntu4-log
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
@@ -60,9 +60,9 @@ CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
 
 -- ARV drugs
 CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
-	VIEW `arv_drug` AS
-	SELECT `drug_id` FROM `drug`
-	WHERE `concept_id` IN (SELECT `concept_id` FROM `concept_set` WHERE `concept_set` = 1085);
+  VIEW `arv_drug` AS
+  SELECT `drug_id` FROM `drug`
+  WHERE `concept_id` IN (SELECT `concept_id` FROM `concept_set` WHERE `concept_set` = 1085);
 
 -- ARV drugs orders
 CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
@@ -74,8 +74,8 @@ CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
 
 -- Non-voided HIV Clinic Registration encounters
 CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
-	VIEW `clinic_registration_encounter` AS
-	SELECT `encounter`.`encounter_id` AS `encounter_id`,
+  VIEW `clinic_registration_encounter` AS
+  SELECT `encounter`.`encounter_id` AS `encounter_id`,
          `encounter`.`encounter_type` AS `encounter_type`,
          `encounter`.`patient_id` AS `patient_id`,
          `encounter`.`provider_id` AS `provider_id`,
@@ -91,13 +91,13 @@ CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
          `encounter`.`uuid` AS `uuid`,
          `encounter`.`changed_by` AS `changed_by`,
          `encounter`.`date_changed` AS `date_changed`
-	FROM `encounter`
-	WHERE (`encounter`.`encounter_type` = 9 AND `encounter`.`voided` = 0);
+  FROM `encounter`
+  WHERE (`encounter`.`encounter_type` = 9 AND `encounter`.`voided` = 0);
 
 DROP FUNCTION IF EXISTS patient_date_enrolled;
 
 DELIMITER $$
-CREATE FUNCTION patient_date_enrolled(my_patient_id int) RETURNS DATE
+CREATE FUNCTION patient_date_enrolled(my_patient_id bigint) RETURNS DATE
 DETERMINISTIC
 BEGIN
 DECLARE my_start_date DATE;
@@ -116,7 +116,7 @@ DELIMITER ;
 DROP FUNCTION IF EXISTS date_antiretrovirals_started;
 
 DELIMITER $$
-CREATE FUNCTION date_antiretrovirals_started(set_patient_id INT, min_state_date DATE) RETURNS DATE
+CREATE FUNCTION date_antiretrovirals_started(set_patient_id bigint, min_state_date DATE) RETURNS DATE
 BEGIN
 
 DECLARE date_started DATE;
@@ -171,7 +171,7 @@ CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
 
 -- The date of the first On ARVs state for each patient
 CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
-	VIEW `patients_on_arvs` AS
+  VIEW `patients_on_arvs` AS
     select
         `p`.`patient_id` AS `patient_id`,
         `person`.`birthdate`,
@@ -193,7 +193,7 @@ CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
 
 -- reason_ or art eligibility obs
 CREATE OR REPLACE ALGORITHM=UNDEFINED  SQL SECURITY INVOKER
-  	VIEW `reason_for_art_eligibility_obs` AS
+    VIEW `reason_for_art_eligibility_obs` AS
     select
         `o`.`person_id` AS `person_id`,
         `o`.`concept_id` AS `concept_id`,
@@ -599,7 +599,7 @@ ORDER BY `patient_id`;
 DROP FUNCTION IF EXISTS earliest_start_date_at_clinic;
 
 DELIMITER $$
-CREATE FUNCTION earliest_start_date_at_clinic(set_patient_id INT) RETURNS DATE
+CREATE FUNCTION earliest_start_date_at_clinic(set_patient_id bigint) RETURNS DATE
 BEGIN
 
 DECLARE date_started DATE;
@@ -613,9 +613,9 @@ DELIMITER ;
 DROP FUNCTION IF EXISTS patient_outcome;
 
 DELIMITER $$
-CREATE FUNCTION `patient_outcome`(patient_id INT, visit_date date) RETURNS varchar(25)
+CREATE FUNCTION `patient_outcome`(patient_id bigint, visit_date date) RETURNS varchar(25)
 BEGIN
-DECLARE set_program_id INT;
+DECLARE set_program_id bigint;
 DECLARE set_patient_state INT;
 DECLARE set_outcome varchar(25);
 DECLARE set_date_started date;
@@ -756,9 +756,9 @@ set visit_year = (SELECT YEAR(FROM_DAYS(TO_DAYS(visit_date))));
 set visit_month = (SELECT MONTH(FROM_DAYS(TO_DAYS(visit_date))));
 set visit_day = (SELECT DAY(FROM_DAYS(TO_DAYS(visit_date))));
 
-SET cul_year 	= (visit_year - birth_year);
+SET cul_year  = (visit_year - birth_year);
 SET cul_month = (visit_month - birth_month);
-SET cul_day 	=	(visit_day - birth_day);
+SET cul_day   = (visit_day - birth_day);
 
 
 IF ((cul_day < 0) = 1) THEN SET cul_day = -1;
@@ -836,54 +836,54 @@ DROP FUNCTION IF EXISTS `current_defaulter`;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50020 */ /*!50003 FUNCTION `current_defaulter`(my_patient_id INT, my_end_date DATETIME) RETURNS int(1)
 BEGIN
-	DECLARE done INT DEFAULT FALSE;
-	DECLARE my_start_date, my_expiry_date, my_obs_datetime DATETIME;
-	DECLARE my_daily_dose, my_quantity, my_pill_count, my_total_text, my_total_numeric DECIMAL;
-	DECLARE my_drug_id, flag INT;
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE my_start_date, my_expiry_date, my_obs_datetime DATETIME;
+  DECLARE my_daily_dose, my_quantity, my_pill_count, my_total_text, my_total_numeric DECIMAL;
+  DECLARE my_drug_id, flag INT;
 
-	DECLARE cur1 CURSOR FOR SELECT d.drug_inventory_id, o.start_date, d.equivalent_daily_dose daily_dose, d.quantity, o.start_date FROM drug_order d
-		INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
-		INNER JOIN orders o ON d.order_id = o.order_id
-			AND d.quantity > 0
-			AND o.voided = 0
-			AND o.start_date <= my_end_date
-			AND o.patient_id = my_patient_id;
+  DECLARE cur1 CURSOR FOR SELECT d.drug_inventory_id, o.start_date, d.equivalent_daily_dose daily_dose, d.quantity, o.start_date FROM drug_order d
+    INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
+    INNER JOIN orders o ON d.order_id = o.order_id
+      AND d.quantity > 0
+      AND o.voided = 0
+      AND o.start_date <= my_end_date
+      AND o.patient_id = my_patient_id;
 
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-	SELECT MAX(o.start_date) INTO @obs_datetime FROM drug_order d
-		INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
-		INNER JOIN orders o ON d.order_id = o.order_id
-			AND d.quantity > 0
-			AND o.voided = 0
-			AND o.start_date <= my_end_date
-			AND o.patient_id = my_patient_id
-		GROUP BY o.patient_id;
+  SELECT MAX(o.start_date) INTO @obs_datetime FROM drug_order d
+    INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
+    INNER JOIN orders o ON d.order_id = o.order_id
+      AND d.quantity > 0
+      AND o.voided = 0
+      AND o.start_date <= my_end_date
+      AND o.patient_id = my_patient_id
+    GROUP BY o.patient_id;
 
-	OPEN cur1;
+  OPEN cur1;
 
-	SET flag = 0;
+  SET flag = 0;
 
-	read_loop: LOOP
-		FETCH cur1 INTO my_drug_id, my_start_date, my_daily_dose, my_quantity, my_obs_datetime;
+  read_loop: LOOP
+    FETCH cur1 INTO my_drug_id, my_start_date, my_daily_dose, my_quantity, my_obs_datetime;
 
-		IF done THEN
-			CLOSE cur1;
-			LEAVE read_loop;
-		END IF;
+    IF done THEN
+      CLOSE cur1;
+      LEAVE read_loop;
+    END IF;
 
-		IF DATE(my_obs_datetime) = DATE(@obs_datetime) THEN
+    IF DATE(my_obs_datetime) = DATE(@obs_datetime) THEN
 
             SET my_pill_count = drug_pill_count(my_patient_id, my_drug_id, my_obs_datetime);
 
             SET @expiry_date = ADDDATE(DATE_SUB(my_start_date, INTERVAL 2 DAY), ((my_quantity + my_pill_count)/my_daily_dose));
 
-			IF my_expiry_date IS NULL THEN
-				SET my_expiry_date = @expiry_date;
-			END IF;
+      IF my_expiry_date IS NULL THEN
+        SET my_expiry_date = @expiry_date;
+      END IF;
 
-			IF @expiry_date < my_expiry_date THEN
-				SET my_expiry_date = @expiry_date;
+      IF @expiry_date < my_expiry_date THEN
+        SET my_expiry_date = @expiry_date;
             END IF;
         END IF;
     END LOOP;
@@ -892,7 +892,7 @@ BEGIN
         SET flag = 1;
     END IF;
 
-	RETURN flag;
+  RETURN flag;
 END */;;
 DELIMITER ;
 
@@ -913,10 +913,10 @@ DROP FUNCTION IF EXISTS `drug_pill_count`;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50020 */ /*!50003 FUNCTION `drug_pill_count`(my_patient_id INT, my_drug_id INT, my_date DATE) RETURNS DECIMAL
 BEGIN
-	DECLARE done INT DEFAULT FALSE;
-	DECLARE my_pill_count, my_total_text, my_total_numeric DECIMAL;
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE my_pill_count, my_total_text, my_total_numeric DECIMAL;
 
-	DECLARE cur1 CURSOR FOR SELECT SUM(ob.value_numeric), SUM(CAST(ob.value_text AS DECIMAL)) FROM obs ob
+  DECLARE cur1 CURSOR FOR SELECT SUM(ob.value_numeric), SUM(CAST(ob.value_text AS DECIMAL)) FROM obs ob
                         INNER JOIN drug_order do ON ob.order_id = do.order_id
                         INNER JOIN orders o ON do.order_id = o.order_id
                     WHERE ob.person_id = my_patient_id
@@ -927,19 +927,19 @@ BEGIN
                         AND DATE(ob.obs_datetime) = my_date
                     GROUP BY ob.person_id;
 
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-	OPEN cur1;
+  OPEN cur1;
 
-	SET my_pill_count = 0;
+  SET my_pill_count = 0;
 
-	read_loop: LOOP
-		FETCH cur1 INTO my_total_numeric, my_total_text;
+  read_loop: LOOP
+    FETCH cur1 INTO my_total_numeric, my_total_text;
 
-		IF done THEN
-			CLOSE cur1;
-			LEAVE read_loop;
-		END IF;
+    IF done THEN
+      CLOSE cur1;
+      LEAVE read_loop;
+    END IF;
 
         IF my_total_numeric IS NULL THEN
             SET my_total_numeric = 0;
@@ -952,7 +952,7 @@ BEGIN
         SET my_pill_count = my_total_numeric + my_total_text;
     END LOOP;
 
-	RETURN my_pill_count;
+  RETURN my_pill_count;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -974,25 +974,25 @@ DELIMITER ;;
 BEGIN
   SET @state_id = NULL;
   SET @new_state_id = NULL;
-	SELECT  patient_program_id INTO @patient_program_id FROM patient_program
-			WHERE patient_id = my_patient_id
-				AND program_id = my_program_id
-				AND voided = 0
-				ORDER BY patient_program_id DESC LIMIT 1;
+  SELECT  patient_program_id INTO @patient_program_id FROM patient_program
+      WHERE patient_id = my_patient_id
+        AND program_id = my_program_id
+        AND voided = 0
+        ORDER BY patient_program_id DESC LIMIT 1;
 
 
-	SELECT state, start_date INTO @state_id, @start_date FROM patient_state
-		WHERE patient_program_id = @patient_program_id
-			AND voided = 0
-			AND start_date <= my_end_date
-		ORDER BY start_date DESC, date_created DESC, patient_state_id DESC LIMIT 1;
+  SELECT state, start_date INTO @state_id, @start_date FROM patient_state
+    WHERE patient_program_id = @patient_program_id
+      AND voided = 0
+      AND start_date <= my_end_date
+    ORDER BY start_date DESC, date_created DESC, patient_state_id DESC LIMIT 1;
 
    IF ( @state_id != 3 ) THEN
 
       SELECT state INTO @new_state_id FROM patient_state
-		   WHERE patient_program_id = @patient_program_id
-			AND voided = 0
-			AND start_date = @start_date
+       WHERE patient_program_id = @patient_program_id
+      AND voided = 0
+      AND start_date = @start_date
          AND state = 3 LIMIT 1;
    END IF;
 
@@ -1000,7 +1000,7 @@ BEGIN
         RETURN @new_state_id;
     END IF;
 
-	RETURN @state_id;
+  RETURN @state_id;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1021,14 +1021,14 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50020 */ /*!50003 FUNCTION `current_state_for_patient_in_flat_tables`(my_patient_id INT, my_end_date DATETIME) RETURNS varchar(255)
 BEGIN
   SET @state_id = NULL;
-	SELECT current_hiv_program_state INTO @state_id FROM flat_table2
+  SELECT current_hiv_program_state INTO @state_id FROM flat_table2
     WHERE current_hiv_program_state IS NOT NULL and current_hiv_program_start_date IS NOT NULL
       AND patient_id = my_patient_id
       AND current_hiv_program_start_date <= my_end_date
     ORDER BY patient_id, current_hiv_program_start_date DESC
     LIMIT 1;
 
-	RETURN @state_id;
+  RETURN @state_id;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1050,13 +1050,13 @@ DELIMITER ;;
     DETERMINISTIC
 BEGIN
   SET @patient_id = NULL;
-	SELECT max(ft3.current_hiv_program_start_date) INTO @patient_id FROM flat_table2 ft3
+  SELECT max(ft3.current_hiv_program_start_date) INTO @patient_id FROM flat_table2 ft3
     WHERE ft3.patient_id = my_patient_id
-	    AND ft3.current_hiv_program_start_date <= my_end_date
-	    AND ft3.current_hiv_program_state = 'On antiretrovirals'
-	    AND ft3.current_hiv_program_start_date IS NOT NULL;
+      AND ft3.current_hiv_program_start_date <= my_end_date
+      AND ft3.current_hiv_program_state = 'On antiretrovirals'
+      AND ft3.current_hiv_program_start_date IS NOT NULL;
 
-	RETURN @patient_id;
+  RETURN @patient_id;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1079,48 +1079,48 @@ BEGIN
   SET @obs_value = NULL;
   SET @encounter_id = NULL;
 
-	SELECT o.encounter_id INTO @encounter_id FROM encounter e
-			INNER JOIN obs o ON e.encounter_id = o.encounter_id AND o.concept_id IN (my_concept_id, @unknown_drug_concept_id) AND o.voided = 0
-		WHERE e.encounter_type = my_encounter_type_id
-			AND e.voided = 0
-			AND e.patient_id = my_patient_id
-			AND e.encounter_datetime <= my_end_date
-		ORDER BY e.encounter_datetime DESC LIMIT 1;
+  SELECT o.encounter_id INTO @encounter_id FROM encounter e
+      INNER JOIN obs o ON e.encounter_id = o.encounter_id AND o.concept_id IN (my_concept_id, @unknown_drug_concept_id) AND o.voided = 0
+    WHERE e.encounter_type = my_encounter_type_id
+      AND e.voided = 0
+      AND e.patient_id = my_patient_id
+      AND e.encounter_datetime <= my_end_date
+    ORDER BY e.encounter_datetime DESC LIMIT 1;
 
-	SELECT cn.name INTO @obs_value FROM obs o
-			LEFT JOIN concept_name cn ON o.value_coded = cn.concept_id AND cn.concept_name_type = 'FULLY_SPECIFIED'
-		WHERE encounter_id = @encounter_id
-			AND o.voided = 0
-			AND o.concept_id = my_concept_id
-			AND o.voided = 0 LIMIT 1;
+  SELECT cn.name INTO @obs_value FROM obs o
+      LEFT JOIN concept_name cn ON o.value_coded = cn.concept_id AND cn.concept_name_type = 'FULLY_SPECIFIED'
+    WHERE encounter_id = @encounter_id
+      AND o.voided = 0
+      AND o.concept_id = my_concept_id
+      AND o.voided = 0 LIMIT 1;
 
   IF @obs_value IS NULL THEN
-    		SELECT 'unknown_drug_value' INTO @obs_value FROM obs
-    			WHERE encounter_id = @encounter_id
-    				AND voided = 0
-    				AND concept_id = my_regimem_given
-    				AND value_coded = unknown_regimen_value
-    				AND voided = 0 LIMIT 1;
+        SELECT 'unknown_drug_value' INTO @obs_value FROM obs
+          WHERE encounter_id = @encounter_id
+            AND voided = 0
+            AND concept_id = my_regimem_given
+            AND value_coded = unknown_regimen_value
+            AND voided = 0 LIMIT 1;
 
   END IF;
 
-	IF @obs_value IS NULL THEN
-		SELECT value_text INTO @obs_value FROM obs
-			WHERE encounter_id = @encounter_id
-				AND voided = 0
-				AND concept_id = my_concept_id
-				AND voided = 0 LIMIT 1;
-	END IF;
+  IF @obs_value IS NULL THEN
+    SELECT value_text INTO @obs_value FROM obs
+      WHERE encounter_id = @encounter_id
+        AND voided = 0
+        AND concept_id = my_concept_id
+        AND voided = 0 LIMIT 1;
+  END IF;
 
-	IF @obs_value IS NULL THEN
-		SELECT value_numeric INTO @obs_value FROM obs
-			WHERE encounter_id = @encounter_id
-				AND voided = 0
-				AND concept_id = my_concept_id
-				AND voided = 0 LIMIT 1;
-	END IF;
+  IF @obs_value IS NULL THEN
+    SELECT value_numeric INTO @obs_value FROM obs
+      WHERE encounter_id = @encounter_id
+        AND voided = 0
+        AND concept_id = my_concept_id
+        AND voided = 0 LIMIT 1;
+  END IF;
 
-	RETURN @obs_value;
+  RETURN @obs_value;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1141,37 +1141,37 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50020 */ /*!50003 FUNCTION `current_text_for_obs`(my_patient_id INT, my_encounter_type_id INT, my_concept_id INT, my_end_date DATETIME) RETURNS VARCHAR(255)
 BEGIN
   SET @obs_value = NULL;
-	SELECT encounter_id INTO @encounter_id FROM encounter
-		WHERE encounter_type = my_encounter_type_id
-			AND voided = 0
-			AND patient_id = my_patient_id
-			AND encounter_datetime <= my_end_date
-		ORDER BY encounter_datetime DESC LIMIT 1;
+  SELECT encounter_id INTO @encounter_id FROM encounter
+    WHERE encounter_type = my_encounter_type_id
+      AND voided = 0
+      AND patient_id = my_patient_id
+      AND encounter_datetime <= my_end_date
+    ORDER BY encounter_datetime DESC LIMIT 1;
 
-	SELECT cn.name INTO @obs_value FROM obs o
-			LEFT JOIN concept_name cn ON o.value_coded = cn.concept_id AND cn.concept_name_type = 'FULLY_SPECIFIED'
-		WHERE encounter_id = @encounter_id
-			AND o.voided = 0
-			AND o.concept_id = my_concept_id
-			AND o.voided = 0 LIMIT 1;
+  SELECT cn.name INTO @obs_value FROM obs o
+      LEFT JOIN concept_name cn ON o.value_coded = cn.concept_id AND cn.concept_name_type = 'FULLY_SPECIFIED'
+    WHERE encounter_id = @encounter_id
+      AND o.voided = 0
+      AND o.concept_id = my_concept_id
+      AND o.voided = 0 LIMIT 1;
 
-	IF @obs_value IS NULL THEN
-		SELECT value_text INTO @obs_value FROM obs
-			WHERE encounter_id = @encounter_id
-				AND voided = 0
-				AND concept_id = my_concept_id
-				AND voided = 0 LIMIT 1;
-	END IF;
+  IF @obs_value IS NULL THEN
+    SELECT value_text INTO @obs_value FROM obs
+      WHERE encounter_id = @encounter_id
+        AND voided = 0
+        AND concept_id = my_concept_id
+        AND voided = 0 LIMIT 1;
+  END IF;
 
-	IF @obs_value IS NULL THEN
-		SELECT value_numeric INTO @obs_value FROM obs
-			WHERE encounter_id = @encounter_id
-				AND voided = 0
-				AND concept_id = my_concept_id
-				AND voided = 0 LIMIT 1;
-	END IF;
+  IF @obs_value IS NULL THEN
+    SELECT value_numeric INTO @obs_value FROM obs
+      WHERE encounter_id = @encounter_id
+        AND voided = 0
+        AND concept_id = my_concept_id
+        AND voided = 0 LIMIT 1;
+  END IF;
 
-	RETURN @obs_value;
+  RETURN @obs_value;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1192,20 +1192,20 @@ DELIMITER ;;
 /*!50003 CREATE*/ /*!50020 */ /*!50003 FUNCTION `current_value_for_obs`(my_patient_id INT, my_encounter_type_id INT, my_concept_id INT, my_end_date DATETIME) RETURNS int(11)
 BEGIN
   SET @obs_value_coded = NULL;
-	SELECT encounter_id INTO @encounter_id FROM encounter
-		WHERE encounter_type = my_encounter_type_id
-			AND voided = 0
-			AND patient_id = my_patient_id
-			AND encounter_datetime <= my_end_date
-		ORDER BY encounter_datetime DESC LIMIT 1;
+  SELECT encounter_id INTO @encounter_id FROM encounter
+    WHERE encounter_type = my_encounter_type_id
+      AND voided = 0
+      AND patient_id = my_patient_id
+      AND encounter_datetime <= my_end_date
+    ORDER BY encounter_datetime DESC LIMIT 1;
 
-	SELECT value_coded INTO @obs_value_coded FROM obs
-			WHERE encounter_id = @encounter_id
-				AND voided = 0
-				AND concept_id = my_concept_id
-				AND voided = 0 LIMIT 1;
+  SELECT value_coded INTO @obs_value_coded FROM obs
+      WHERE encounter_id = @encounter_id
+        AND voided = 0
+        AND concept_id = my_concept_id
+        AND voided = 0 LIMIT 1;
 
-	RETURN @obs_value_coded;
+  RETURN @obs_value_coded;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1225,32 +1225,32 @@ DROP FUNCTION IF EXISTS `current_value_for_obs_at_initiation`;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50020 */ /*!50003 FUNCTION `current_value_for_obs_at_initiation`(my_patient_id INT, my_earliest_start_date DATETIME, my_encounter_type_id INT, my_concept_id INT, my_end_date DATETIME) RETURNS int(11)
 BEGIN
-	DECLARE obs_value_coded, my_encounter_id INT;
+  DECLARE obs_value_coded, my_encounter_id INT;
 
-	SELECT encounter_id INTO my_encounter_id FROM encounter
-		WHERE encounter_type = my_encounter_type_id
-			AND voided = 0
-			AND patient_id = my_patient_id
-			AND encounter_datetime <= ADDDATE(DATE(my_earliest_start_date), 1)
-		ORDER BY encounter_datetime DESC LIMIT 1;
+  SELECT encounter_id INTO my_encounter_id FROM encounter
+    WHERE encounter_type = my_encounter_type_id
+      AND voided = 0
+      AND patient_id = my_patient_id
+      AND encounter_datetime <= ADDDATE(DATE(my_earliest_start_date), 1)
+    ORDER BY encounter_datetime DESC LIMIT 1;
 
-	IF my_encounter_id IS NULL THEN
-		SELECT encounter_id INTO my_encounter_id FROM encounter
-			WHERE encounter_type = my_encounter_type_id
-				AND voided = 0
-				AND patient_id = my_patient_id
-				AND encounter_datetime <= my_end_date
+  IF my_encounter_id IS NULL THEN
+    SELECT encounter_id INTO my_encounter_id FROM encounter
+      WHERE encounter_type = my_encounter_type_id
+        AND voided = 0
+        AND patient_id = my_patient_id
+        AND encounter_datetime <= my_end_date
                 AND encounter_datetime >= ADDDATE(DATE(my_earliest_start_date), 1)
-			ORDER BY encounter_datetime LIMIT 1;
-	END IF;
+      ORDER BY encounter_datetime LIMIT 1;
+  END IF;
 
-	SELECT value_coded INTO obs_value_coded FROM obs
-			WHERE encounter_id = my_encounter_id
-				AND voided = 0
-				AND concept_id = my_concept_id
-				AND voided = 0 LIMIT 1;
+  SELECT value_coded INTO obs_value_coded FROM obs
+      WHERE encounter_id = my_encounter_id
+        AND voided = 0
+        AND concept_id = my_concept_id
+        AND voided = 0 LIMIT 1;
 
-	RETURN obs_value_coded;
+  RETURN obs_value_coded;
 END */;;
 DELIMITER ;
 /*!50003 SET sql_mode              = @saved_sql_mode */ ;
@@ -1300,43 +1300,43 @@ DROP FUNCTION IF EXISTS `current_defaulter_date`;
 DELIMITER ;;
 /*!50003 CREATE*/ /*!50020 */ /*!50003 FUNCTION `current_defaulter_date`(my_patient_id INT, my_end_date DATETIME) RETURNS DATE
 BEGIN
-	DECLARE done INT DEFAULT FALSE;
-	DECLARE my_start_date, my_expiry_date, my_obs_datetime, my_defaulted_date DATETIME;
-	DECLARE my_daily_dose, my_quantity, my_pill_count, my_total_text, my_total_numeric DECIMAL;
-	DECLARE my_drug_id, flag INT;
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE my_start_date, my_expiry_date, my_obs_datetime, my_defaulted_date DATETIME;
+  DECLARE my_daily_dose, my_quantity, my_pill_count, my_total_text, my_total_numeric DECIMAL;
+  DECLARE my_drug_id, flag INT;
 
-	DECLARE cur1 CURSOR FOR SELECT d.drug_inventory_id, o.start_date, d.equivalent_daily_dose daily_dose, d.quantity, o.start_date FROM drug_order d
-		INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
-		INNER JOIN orders o ON d.order_id = o.order_id
-			AND d.quantity > 0
-			AND o.voided = 0
-			AND o.start_date <= my_end_date
-			AND o.patient_id = my_patient_id;
+  DECLARE cur1 CURSOR FOR SELECT d.drug_inventory_id, o.start_date, d.equivalent_daily_dose daily_dose, d.quantity, o.start_date FROM drug_order d
+    INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
+    INNER JOIN orders o ON d.order_id = o.order_id
+      AND d.quantity > 0
+      AND o.voided = 0
+      AND o.start_date <= my_end_date
+      AND o.patient_id = my_patient_id;
 
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-	SELECT MAX(o.start_date) INTO @obs_datetime FROM drug_order d
-		INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
-		INNER JOIN orders o ON d.order_id = o.order_id
-			AND d.quantity > 0
-			AND o.voided = 0
-			AND o.start_date <= my_end_date
-			AND o.patient_id = my_patient_id
-		GROUP BY o.patient_id;
+  SELECT MAX(o.start_date) INTO @obs_datetime FROM drug_order d
+    INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
+    INNER JOIN orders o ON d.order_id = o.order_id
+      AND d.quantity > 0
+      AND o.voided = 0
+      AND o.start_date <= my_end_date
+      AND o.patient_id = my_patient_id
+    GROUP BY o.patient_id;
 
-	OPEN cur1;
+  OPEN cur1;
 
-	SET flag = 0;
+  SET flag = 0;
 
-	read_loop: LOOP
-		FETCH cur1 INTO my_drug_id, my_start_date, my_daily_dose, my_quantity, my_obs_datetime;
+  read_loop: LOOP
+    FETCH cur1 INTO my_drug_id, my_start_date, my_daily_dose, my_quantity, my_obs_datetime;
 
-		IF done THEN
-			CLOSE cur1;
-			LEAVE read_loop;
-		END IF;
+    IF done THEN
+      CLOSE cur1;
+      LEAVE read_loop;
+    END IF;
 
-		IF DATE(my_obs_datetime) = DATE(@obs_datetime) THEN
+    IF DATE(my_obs_datetime) = DATE(@obs_datetime) THEN
 
       IF my_daily_dose = 0 OR my_daily_dose IS NULL OR LENGTH(my_daily_dose) < 1 THEN
         SET my_daily_dose = 1;
@@ -1346,12 +1346,12 @@ BEGIN
 
             SET @expiry_date = ADDDATE(my_start_date, ((my_quantity + my_pill_count)/my_daily_dose));
 
-			IF my_expiry_date IS NULL THEN
-				SET my_expiry_date = @expiry_date;
-			END IF;
+      IF my_expiry_date IS NULL THEN
+        SET my_expiry_date = @expiry_date;
+      END IF;
 
-			IF @expiry_date < my_expiry_date THEN
-				SET my_expiry_date = @expiry_date;
+      IF @expiry_date < my_expiry_date THEN
+        SET my_expiry_date = @expiry_date;
             END IF;
         END IF;
     END LOOP;
@@ -1360,7 +1360,7 @@ BEGIN
         SET my_defaulted_date = ADDDATE(my_expiry_date, 60);
     END IF;
 
-	RETURN my_defaulted_date;
+  RETURN my_defaulted_date;
 END */;;
 DELIMITER ;
 
@@ -1819,7 +1819,7 @@ BEGIN
   SET @encounter_id = NULL;
 
   SELECT o.encounter_id INTO @encounter_id FROM encounter e
-  	INNER JOIN obs o ON e.encounter_id = o.encounter_id AND o.concept_id IN (my_concept_id, @unknown_drug_concept_id) AND o.voided = 0
+    INNER JOIN obs o ON e.encounter_id = o.encounter_id AND o.concept_id IN (my_concept_id, @unknown_drug_concept_id) AND o.voided = 0
   WHERE e.encounter_type = my_encounter_type_id
   AND e.voided = 0
   AND e.patient_id = my_patient_id
@@ -1827,7 +1827,7 @@ BEGIN
   ORDER BY e.encounter_datetime DESC LIMIT 1;
 
   SELECT cn.name INTO @obs_value FROM obs o
-  	LEFT JOIN concept_name cn ON o.value_coded = cn.concept_id AND cn.concept_name_type = 'FULLY_SPECIFIED'
+    LEFT JOIN concept_name cn ON o.value_coded = cn.concept_id AND cn.concept_name_type = 'FULLY_SPECIFIED'
   WHERE encounter_id = @encounter_id
   AND o.voided = 0
   AND o.concept_id = my_concept_id
@@ -2156,54 +2156,54 @@ DROP FUNCTION IF EXISTS `current_pepfar_defaulter`;
 
 CREATE  FUNCTION `current_pepfar_defaulter`(my_patient_id INT, my_end_date DATETIME) RETURNS int(1)
 BEGIN
-	DECLARE done INT DEFAULT FALSE;
-	DECLARE my_start_date, my_expiry_date, my_obs_datetime DATETIME;
-	DECLARE my_daily_dose, my_quantity, my_pill_count, my_total_text, my_total_numeric DECIMAL;
-	DECLARE my_drug_id, flag INT;
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE my_start_date, my_expiry_date, my_obs_datetime DATETIME;
+  DECLARE my_daily_dose, my_quantity, my_pill_count, my_total_text, my_total_numeric DECIMAL;
+  DECLARE my_drug_id, flag INT;
 
-	DECLARE cur1 CURSOR FOR SELECT d.drug_inventory_id, o.start_date, d.equivalent_daily_dose daily_dose, d.quantity, o.start_date FROM drug_order d
-		INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
-		INNER JOIN orders o ON d.order_id = o.order_id
-			AND d.quantity > 0
-			AND o.voided = 0
-			AND o.start_date <= my_end_date
-			AND o.patient_id = my_patient_id;
+  DECLARE cur1 CURSOR FOR SELECT d.drug_inventory_id, o.start_date, d.equivalent_daily_dose daily_dose, d.quantity, o.start_date FROM drug_order d
+    INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
+    INNER JOIN orders o ON d.order_id = o.order_id
+      AND d.quantity > 0
+      AND o.voided = 0
+      AND o.start_date <= my_end_date
+      AND o.patient_id = my_patient_id;
 
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-	SELECT MAX(o.start_date) INTO @obs_datetime FROM drug_order d
-		INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
-		INNER JOIN orders o ON d.order_id = o.order_id
-			AND d.quantity > 0
-			AND o.voided = 0
-			AND o.start_date <= my_end_date
-			AND o.patient_id = my_patient_id
-		GROUP BY o.patient_id;
+  SELECT MAX(o.start_date) INTO @obs_datetime FROM drug_order d
+    INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
+    INNER JOIN orders o ON d.order_id = o.order_id
+      AND d.quantity > 0
+      AND o.voided = 0
+      AND o.start_date <= my_end_date
+      AND o.patient_id = my_patient_id
+    GROUP BY o.patient_id;
 
-	OPEN cur1;
+  OPEN cur1;
 
-	SET flag = 0;
+  SET flag = 0;
 
-	read_loop: LOOP
-		FETCH cur1 INTO my_drug_id, my_start_date, my_daily_dose, my_quantity, my_obs_datetime;
+  read_loop: LOOP
+    FETCH cur1 INTO my_drug_id, my_start_date, my_daily_dose, my_quantity, my_obs_datetime;
 
-		IF done THEN
-			CLOSE cur1;
-			LEAVE read_loop;
-		END IF;
+    IF done THEN
+      CLOSE cur1;
+      LEAVE read_loop;
+    END IF;
 
-		IF DATE(my_obs_datetime) = DATE(@obs_datetime) THEN
+    IF DATE(my_obs_datetime) = DATE(@obs_datetime) THEN
 
             SET my_pill_count = drug_pill_count(my_patient_id, my_drug_id, my_obs_datetime);
 
             SET @expiry_date = ADDDATE(DATE_SUB(my_start_date, INTERVAL 2 DAY), ((my_quantity + my_pill_count)/my_daily_dose));
 
-			IF my_expiry_date IS NULL THEN
-				SET my_expiry_date = @expiry_date;
-			END IF;
+      IF my_expiry_date IS NULL THEN
+        SET my_expiry_date = @expiry_date;
+      END IF;
 
-			IF @expiry_date < my_expiry_date THEN
-				SET my_expiry_date = @expiry_date;
+      IF @expiry_date < my_expiry_date THEN
+        SET my_expiry_date = @expiry_date;
             END IF;
         END IF;
     END LOOP;
@@ -2212,50 +2212,50 @@ BEGIN
         SET flag = 1;
     END IF;
 
-	RETURN flag;
+  RETURN flag;
 END;
 
 DROP FUNCTION IF EXISTS `current_pepfar_defaulter_date`;
 
 CREATE FUNCTION `current_pepfar_defaulter_date`(my_patient_id INT, my_end_date DATETIME) RETURNS DATE
 BEGIN
-	DECLARE done INT DEFAULT FALSE;
-	DECLARE my_start_date, my_expiry_date, my_obs_datetime, my_defaulted_date DATETIME;
-	DECLARE my_daily_dose, my_quantity, my_pill_count, my_total_text, my_total_numeric DECIMAL;
-	DECLARE my_drug_id, flag INT;
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE my_start_date, my_expiry_date, my_obs_datetime, my_defaulted_date DATETIME;
+  DECLARE my_daily_dose, my_quantity, my_pill_count, my_total_text, my_total_numeric DECIMAL;
+  DECLARE my_drug_id, flag INT;
 
-	DECLARE cur1 CURSOR FOR SELECT d.drug_inventory_id, o.start_date, d.equivalent_daily_dose daily_dose, d.quantity, o.start_date FROM drug_order d
-		INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
-		INNER JOIN orders o ON d.order_id = o.order_id
-			AND d.quantity > 0
-			AND o.voided = 0
-			AND o.start_date <= my_end_date
-			AND o.patient_id = my_patient_id;
+  DECLARE cur1 CURSOR FOR SELECT d.drug_inventory_id, o.start_date, d.equivalent_daily_dose daily_dose, d.quantity, o.start_date FROM drug_order d
+    INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
+    INNER JOIN orders o ON d.order_id = o.order_id
+      AND d.quantity > 0
+      AND o.voided = 0
+      AND o.start_date <= my_end_date
+      AND o.patient_id = my_patient_id;
 
-	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
 
-	SELECT MAX(o.start_date) INTO @obs_datetime FROM drug_order d
-		INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
-		INNER JOIN orders o ON d.order_id = o.order_id
-			AND d.quantity > 0
-			AND o.voided = 0
-			AND o.start_date <= my_end_date
-			AND o.patient_id = my_patient_id
-		GROUP BY o.patient_id;
+  SELECT MAX(o.start_date) INTO @obs_datetime FROM drug_order d
+    INNER JOIN arv_drug ad ON d.drug_inventory_id = ad.drug_id
+    INNER JOIN orders o ON d.order_id = o.order_id
+      AND d.quantity > 0
+      AND o.voided = 0
+      AND o.start_date <= my_end_date
+      AND o.patient_id = my_patient_id
+    GROUP BY o.patient_id;
 
-	OPEN cur1;
+  OPEN cur1;
 
-	SET flag = 0;
+  SET flag = 0;
 
-	read_loop: LOOP
-		FETCH cur1 INTO my_drug_id, my_start_date, my_daily_dose, my_quantity, my_obs_datetime;
+  read_loop: LOOP
+    FETCH cur1 INTO my_drug_id, my_start_date, my_daily_dose, my_quantity, my_obs_datetime;
 
-		IF done THEN
-			CLOSE cur1;
-			LEAVE read_loop;
-		END IF;
+    IF done THEN
+      CLOSE cur1;
+      LEAVE read_loop;
+    END IF;
 
-		IF DATE(my_obs_datetime) = DATE(@obs_datetime) THEN
+    IF DATE(my_obs_datetime) = DATE(@obs_datetime) THEN
 
       IF my_daily_dose = 0 OR my_daily_dose IS NULL OR LENGTH(my_daily_dose) < 1 THEN
         SET my_daily_dose = 1;
@@ -2265,12 +2265,12 @@ BEGIN
 
             SET @expiry_date = ADDDATE(my_start_date, ((my_quantity + my_pill_count)/my_daily_dose));
 
-			IF my_expiry_date IS NULL THEN
-				SET my_expiry_date = @expiry_date;
-			END IF;
+      IF my_expiry_date IS NULL THEN
+        SET my_expiry_date = @expiry_date;
+      END IF;
 
-			IF @expiry_date < my_expiry_date THEN
-				SET my_expiry_date = @expiry_date;
+      IF @expiry_date < my_expiry_date THEN
+        SET my_expiry_date = @expiry_date;
             END IF;
         END IF;
     END LOOP;
@@ -2279,7 +2279,7 @@ BEGIN
         SET my_defaulted_date = ADDDATE(my_expiry_date, 30);
     END IF;
 
-	RETURN my_defaulted_date;
+  RETURN my_defaulted_date;
 END;
 
 
@@ -2289,8 +2289,8 @@ DROP FUNCTION IF EXISTS `patient_screened_for_tb`;
 
 CREATE FUNCTION `patient_screened_for_tb`(my_patient_id INT, my_start_date DATE, my_end_date DATE) RETURNS INT
 BEGIN
-	DECLARE screened INT DEFAULT FALSE;
-	DECLARE record_value INT;
+  DECLARE screened INT DEFAULT FALSE;
+  DECLARE record_value INT;
 
   SET record_value = (SELECT ob.person_id FROM obs ob
     INNER JOIN temp_earliest_start_date e
@@ -2315,7 +2315,7 @@ BEGIN
     SET screened = TRUE;
   END IF;
 
-	RETURN screened;
+  RETURN screened;
 END;
 
 
@@ -2323,8 +2323,8 @@ DROP FUNCTION IF EXISTS `patient_given_ipt`;
 
 CREATE FUNCTION `patient_given_ipt`(my_patient_id INT, my_start_date DATE, my_end_date DATE) RETURNS INT
 BEGIN
-	DECLARE given INT DEFAULT FALSE;
-	DECLARE record_value INT;
+  DECLARE given INT DEFAULT FALSE;
+  DECLARE record_value INT;
 
   SET record_value = (SELECT o.patient_id FROM drug_order d
       INNER JOIN orders o ON o.order_id = d.order_id
@@ -2344,7 +2344,7 @@ BEGIN
   END IF;
 
 
-	RETURN given;
+  RETURN given;
 END;
 
 
@@ -2495,8 +2495,8 @@ DROP FUNCTION IF EXISTS `patient_tb_status`;
 
 CREATE FUNCTION `patient_tb_status`(my_patient_id INT, my_end_date DATE) RETURNS INT
 BEGIN
-	DECLARE screened INT DEFAULT FALSE;
-	DECLARE tb_status INT;
+  DECLARE screened INT DEFAULT FALSE;
+  DECLARE tb_status INT;
   DECLARE tb_status_concept_id INT;
 
   SET tb_status_concept_id = (SELECT concept_id FROM concept_name
@@ -2513,7 +2513,7 @@ BEGIN
     AND ob.person_id = my_patient_id
     GROUP BY ob.person_id);
 
-	RETURN tb_status;
+  RETURN tb_status;
 END;
 
 
@@ -2554,7 +2554,7 @@ BEGIN
     AND ob.person_id = my_patient_id);
 
 
-	RETURN @adherences;
+  RETURN @adherences;
 END;
 
 */
@@ -2603,7 +2603,7 @@ BEGIN
   END IF;
 
 
-	RETURN 'No';
+  RETURN 'No';
 END;
 
 DROP FUNCTION IF EXISTS `patient_who_stage`;
